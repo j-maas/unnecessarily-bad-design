@@ -1,4 +1,4 @@
-# WTF, nftables?
+# How to program
 
 ```bash
 npm install

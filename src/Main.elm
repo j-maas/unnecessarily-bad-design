@@ -1,58 +1,46 @@
 module Main exposing (main)
 
-import Color
+import Document exposing (Document)
+import Documents.Markup
 import Element exposing (Element)
-import Element.Background
-import Element.Border
-import Element.Font as Font
 import Element.Region
 import Head
 import Head.Seo as Seo
 import Html exposing (Html)
-import Markdown
 import Metadata exposing (Metadata)
 import Pages exposing (images, pages)
-import Pages.Document
 import Pages.Manifest as Manifest
 import Pages.Manifest.Category
 import Pages.PagePath exposing (PagePath)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
+import Renderer
 
 
 manifest : Manifest.Config Pages.PathKey
 manifest =
-    { backgroundColor = Just Color.white
+    { backgroundColor = Nothing
     , categories = [ Pages.Manifest.Category.education ]
     , displayMode = Manifest.Standalone
     , orientation = Manifest.Portrait
-    , description = "elm-pages-starter - A statically typed site generator."
+    , description = "Learn to create good software"
     , iarcRatingId = Nothing
-    , name = "elm-pages-starter"
-    , themeColor = Just Color.white
+    , name = "How to program"
+    , themeColor = Nothing
     , startUrl = pages.index
-    , shortName = Just "elm-pages-starter"
+    , shortName = Nothing
     , sourceIcon = images.iconPng
     }
 
 
-type alias Rendered =
-    Element Msg
-
-
-
--- the intellij-elm plugin doesn't support type aliases for Programs so we need to use this line
--- main : Platform.Program Pages.Platform.Flags (Pages.Platform.Model Model Msg Metadata Rendered) (Pages.Platform.Msg Msg Metadata Rendered)
-
-
-main : Pages.Platform.Program Model Msg Metadata Rendered
+main : Pages.Platform.Program Model Msg Metadata Document
 main =
     Pages.Platform.application
         { init = \_ -> init
         , view = view
         , update = update
         , subscriptions = subscriptions
-        , documents = [ markdownDocument ]
+        , documents = [ Documents.Markup.document ]
         , manifest = manifest
         , canonicalSiteUrl = canonicalSiteUrl
         , onPageChange = \_ -> ()
@@ -76,21 +64,6 @@ generateFiles :
             )
 generateFiles _ =
     []
-
-
-markdownDocument : ( String, Pages.Document.DocumentHandler Metadata Rendered )
-markdownDocument =
-    Pages.Document.parser
-        { extension = "md"
-        , metadata = Metadata.decoder
-        , body =
-            \markdownBody ->
-                Html.div [] [ Markdown.toHtml [] markdownBody ]
-                    |> Element.html
-                    |> List.singleton
-                    |> Element.paragraph [ Element.width Element.fill ]
-                    |> Ok
-        }
 
 
 type alias Model =
@@ -126,48 +99,48 @@ view :
         }
     ->
         StaticHttp.Request
-            { view : Model -> Rendered -> { title : String, body : Html Msg }
+            { view : Model -> Document -> { title : String, body : Html Msg }
             , head : List (Head.Tag Pages.PathKey)
             }
-view _ page =
+view _ meta =
     StaticHttp.succeed
         { view =
-            \_ viewForPage ->
+            \_ document ->
                 let
                     { title, body } =
-                        pageView page viewForPage
+                        viewPage meta document
                 in
                 { title = title
                 , body =
-                    body
-                        |> Element.layout
-                            [ Element.width Element.fill
-                            , Font.size 20
-                            , Font.family [ Font.typeface "Roboto" ]
-                            , Font.color (Element.rgba255 0 0 0 0.8)
-                            ]
+                    Element.layout
+                        [ Element.width Element.fill
+                        ]
+                        body
                 }
-        , head = head page.frontmatter
+        , head = head meta.frontmatter
         }
 
 
-pageView : { path : PagePath Pages.PathKey, frontmatter : Metadata } -> Rendered -> { title : String, body : Element Msg }
-pageView page viewForPage =
+viewPage :
+    { path : PagePath Pages.PathKey, frontmatter : Metadata }
+    -> Document
+    -> { title : String, body : Element Msg }
+viewPage page document =
     case page.frontmatter of
         Metadata.Page metadata ->
             { title = metadata.title
             , body =
-                [ Element.column
-                    [ Element.padding 50
-                    , Element.spacing 60
+                let
+                    rendered =
+                        Renderer.render (Document.Title metadata.title :: document)
+                in
+                Element.el
+                    [ Element.padding (Renderer.rem 4)
+                    , Element.width (Element.fill |> Element.maximum (Renderer.rem 52))
+                    , Element.centerX
                     , Element.Region.mainContent
                     ]
-                    [ viewForPage
-                    ]
-                ]
-                    |> Element.textColumn
-                        [ Element.width Element.fill
-                        ]
+                    rendered
             }
 
 
