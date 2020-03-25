@@ -262,7 +262,7 @@ renderCode code =
             , Css.fontFamilies [ "Source Code Pro", "monospace" ]
             , Css.borderRadius (em 0.2)
             , Css.backgroundColor (Css.hsl 0 0 0.9)
-            , Css.padding (em 0.05)
+            , Css.padding2 (em 0.05) (em 0.2)
             , Css.fontSize (em 0.95)
             ]
         ]
