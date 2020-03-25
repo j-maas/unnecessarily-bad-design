@@ -1,11 +1,12 @@
-module Renderer exposing (Rendered, Text, heading, mainContent, paragraph, render, renderDocument, subheading, title)
+module Renderer exposing (Rendered, heading, mainContent, paragraph, render, renderDocument, subheading, title)
 
 import Css exposing (em, num, rem, zero)
 import Css.Global
 import Document exposing (..)
 import Html as PlainHtml
 import Html.Styled as Html exposing (Html)
-import Html.Styled.Attributes exposing (css)
+import Html.Styled.Attributes as HtmlAttributes exposing (css)
+import Url exposing (Url)
 
 
 type alias Rendered msg =
@@ -24,22 +25,14 @@ renderDocument blocks =
                 Title content ->
                     title content
 
-                Heading content ->
-                    heading content
+                Heading contents ->
+                    heading contents
 
-                Subheading content ->
-                    subheading content
+                Subheading contents ->
+                    subheading contents
 
                 Paragraph contents ->
-                    paragraph
-                        (List.map
-                            (\text ->
-                                { style = { italic = text.style.emphasized }
-                                , content = text.content
-                                }
-                            )
-                            contents
-                        )
+                    paragraph contents
         )
         blocks
         |> document
@@ -125,8 +118,8 @@ title text =
         [ Html.text text ]
 
 
-heading : String -> Rendered msg
-heading text =
+heading : List Document.Inline -> Rendered msg
+heading contents =
     Html.h2
         [ css
             [ headingStyle
@@ -134,11 +127,11 @@ heading text =
                 (rem 1.25)
             ]
         ]
-        [ Html.text text ]
+        (List.map renderInline contents)
 
 
-subheading : String -> Rendered msg
-subheading text =
+subheading : List Document.Inline -> Rendered msg
+subheading contents =
     Html.h3
         [ css
             [ headingStyle
@@ -146,7 +139,7 @@ subheading text =
                 (rem 1.1)
             ]
         ]
-        [ Html.text text ]
+        (List.map renderInline contents)
 
 
 headingStyle : Css.Style
@@ -158,28 +151,38 @@ headingStyle =
         ]
 
 
-paragraph : List Text -> Rendered msg
+paragraph : List Inline -> Rendered msg
 paragraph content =
     Html.p
         [ css [ paragraphStyle ]
         ]
-        (List.map renderText content)
+        (List.map renderInline content)
 
 
 paragraphStyle : Css.Style
 paragraphStyle =
     Css.batch
-        [ Css.fontFamilies [ "Source Sans Pro", "sans-serif" ]
+        [ Css.fontFamilies [ "Muli", "sans-serif" ]
         , Css.margin zero
         , Css.lineHeight (num 1.3)
         ]
+
+
+renderInline : Inline -> Rendered msg
+renderInline inline =
+    case inline of
+        Document.TextInline text ->
+            renderText text
+
+        Document.LinkInline link ->
+            renderLink link
 
 
 renderText : Text -> Rendered msg
 renderText text =
     let
         italic =
-            if text.style.italic then
+            if text.style.emphasized then
                 [ Css.fontStyle Css.italic ]
 
             else
@@ -195,11 +198,31 @@ renderText text =
         Html.span [ css styles ] [ Html.text text.content ]
 
 
+renderLink : Document.Link -> Rendered msg
+renderLink link =
+    let
+        unvisitedColor =
+            Css.rgb 22 22 162
 
--- Element.el italic (Element.text text.content)
+        visitedColor =
+            Css.inherit
+    in
+    Html.a
+        [ href link.url
+        , css
+            [ Css.color unvisitedColor
+            , Css.visited
+                [ Css.color visitedColor
+                ]
+            , Css.hover
+                [ Css.textDecorationStyle Css.dotted
+                ]
+            ]
+        ]
+        (List.map renderText link.text)
 
 
-type alias Text =
-    { style : { italic : Bool }
-    , content : String
-    }
+href : Url -> Html.Attribute msg
+href url =
+    Url.toString url
+        |> HtmlAttributes.href

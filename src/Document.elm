@@ -1,4 +1,6 @@
-module Document exposing (Block(..), Document, Text, TextStyle)
+module Document exposing (Block(..), Document, Inline(..), Link, Text, TextStyle)
+
+import Url exposing (Url)
 
 
 type alias Document =
@@ -7,9 +9,14 @@ type alias Document =
 
 type Block
     = Title String
-    | Heading String
-    | Subheading String
-    | Paragraph (List Text)
+    | Heading (List Inline)
+    | Subheading (List Inline)
+    | Paragraph (List Inline)
+
+
+type Inline
+    = TextInline Text
+    | LinkInline Link
 
 
 type alias Text =
@@ -20,4 +27,10 @@ type alias Text =
 
 type alias TextStyle =
     { emphasized : Bool
+    }
+
+
+type alias Link =
+    { text : List Text
+    , url : Url
     }
