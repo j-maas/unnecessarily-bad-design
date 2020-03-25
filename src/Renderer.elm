@@ -52,7 +52,7 @@ mainContent contents =
     Html.main_
         [ css
             [ Css.padding (rem 1)
-            , Css.maxWidth (rem 52)
+            , Css.maxWidth (rem 40)
             , Css.margin Css.auto
             ]
         ]
