@@ -255,7 +255,7 @@ renderReference reference =
 
 renderCode : Document.Code -> Rendered msg
 renderCode code =
-    Html.span
+    Html.code
         [ css
             [ Css.whiteSpace Css.preWrap
             , Css.fontFamilies [ "Source Code Pro", "monospace" ]
