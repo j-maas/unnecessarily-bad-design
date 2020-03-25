@@ -149,6 +149,7 @@ headingStyle =
         [ Css.fontFamilies [ "Bitter", "serif" ]
         , Css.fontWeight Css.bold
         , Css.margin zero
+        , Css.lineHeight (num 1.2)
         ]
 
 
@@ -165,7 +166,7 @@ paragraphStyle =
     Css.batch
         [ Css.fontFamilies [ "Asap", "sans-serif" ]
         , Css.margin zero
-        , Css.lineHeight (num 1.3)
+        , Css.lineHeight (num 1.35)
         ]
 
 
