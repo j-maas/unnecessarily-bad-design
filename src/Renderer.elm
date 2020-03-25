@@ -163,7 +163,7 @@ paragraph content =
 paragraphStyle : Css.Style
 paragraphStyle =
     Css.batch
-        [ Css.fontFamilies [ "Muli", "sans-serif" ]
+        [ Css.fontFamilies [ "Asap", "sans-serif" ]
         , Css.margin zero
         , Css.lineHeight (num 1.3)
         ]
