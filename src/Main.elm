@@ -2,8 +2,6 @@ module Main exposing (main)
 
 import Document exposing (Document)
 import Documents.Markup
-import Element exposing (Element)
-import Element.Region
 import Head
 import Head.Seo as Seo
 import Html exposing (Html)
@@ -133,7 +131,7 @@ viewPage page document =
                         Renderer.renderDocument (Document.Title metadata.title :: document)
                 in
                 Renderer.mainContent
-                    [rendered]
+                    [ rendered ]
             }
 
 

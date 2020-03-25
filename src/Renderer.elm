@@ -1,6 +1,6 @@
 module Renderer exposing (Rendered, heading, mainContent, paragraph, render, renderDocument, subheading, title)
 
-import Css exposing (em, num, rem, zero)
+import Css exposing (num, rem, zero)
 import Css.Global
 import Document exposing (..)
 import Html as PlainHtml
