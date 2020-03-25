@@ -71,7 +71,7 @@ richTextMark =
         { view = \styles text -> Document.TextInline (convertText styles text)
         , replacements = Mark.commonReplacements
         , inlines =
-            [ linkInline ]
+            [ linkInline, referenceInline ]
         }
 
 
@@ -115,5 +115,30 @@ urlMark =
                     |> Result.fromMaybe
                         { title = "Invalid URL"
                         , message = [ "This URL is not in a valid format." ]
+                        }
+            )
+
+
+referenceInline : Mark.Record Document.Inline
+referenceInline =
+    Mark.annotation "ref"
+        (\styledContents path ->
+            Document.ReferenceInline
+                { text = List.map (\( styles, text ) -> convertText styles text) styledContents
+                , path = path
+                }
+        )
+        |> Mark.field "path" pathMark
+
+
+pathMark : Mark.Block Document.Path
+pathMark =
+    Mark.string
+        |> Mark.verify
+            (\str ->
+                Document.pathFromString str
+                    |> Result.fromMaybe
+                        { title = "Dead reference"
+                        , message = [ "This reference does not match any of the existing pages." ]
                         }
             )

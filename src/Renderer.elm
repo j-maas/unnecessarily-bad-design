@@ -1,12 +1,13 @@
 module Renderer exposing (Rendered, heading, mainContent, paragraph, render, renderDocument, subheading, title)
 
-import Css exposing (num, rem, zero)
+import Css exposing (em, num, rem, zero)
 import Css.Global
 import Document exposing (..)
 import Html as PlainHtml
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as HtmlAttributes exposing (css)
-import Url exposing (Url)
+import Pages.PagePath
+import Url
 
 
 type alias Rendered msg =
@@ -172,14 +173,17 @@ renderInline : Inline -> Rendered msg
 renderInline inline =
     case inline of
         Document.TextInline text ->
-            renderText text
+            renderText [] text
 
         Document.LinkInline link ->
             renderLink link
 
+        Document.ReferenceInline reference ->
+            renderReference reference
 
-renderText : Text -> Rendered msg
-renderText text =
+
+renderText : List Css.Style -> Text -> Rendered msg
+renderText extraStyles text =
     let
         italic =
             if text.style.emphasized then
@@ -189,7 +193,7 @@ renderText text =
                 []
 
         styles =
-            italic
+            italic ++ extraStyles
     in
     if List.isEmpty styles then
         Html.text text.content
@@ -200,6 +204,14 @@ renderText text =
 
 renderLink : Document.Link -> Rendered msg
 renderLink link =
+    viewLink
+        { text = List.map (renderText []) link.text
+        , url = Url.toString link.url
+        }
+
+
+viewLink : { text : List (Rendered msg), url : String } -> Rendered msg
+viewLink { text, url } =
     let
         unvisitedColor =
             Css.rgb 22 22 162
@@ -208,7 +220,7 @@ renderLink link =
             Css.inherit
     in
     Html.a
-        [ href link.url
+        [ HtmlAttributes.href url
         , css
             [ Css.color unvisitedColor
             , Css.visited
@@ -219,10 +231,20 @@ renderLink link =
                 ]
             ]
         ]
-        (List.map renderText link.text)
+        text
 
 
-href : Url -> Html.Attribute msg
-href url =
-    Url.toString url
-        |> HtmlAttributes.href
+renderReference : Document.Reference -> Rendered msg
+renderReference reference =
+    viewLink
+        { text =
+            List.map
+                (renderText
+                    [ Css.fontFamilies [ "Bitter", "serif" ]
+                    , Css.textTransform Css.uppercase
+                    , Css.fontSize (em 0.8)
+                    ]
+                )
+                reference.text
+        , url = Pages.PagePath.toString reference.path
+        }
