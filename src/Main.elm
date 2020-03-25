@@ -112,9 +112,7 @@ view _ meta =
                 in
                 { title = title
                 , body =
-                    Element.layout
-                        [ Element.width Element.fill
-                        ]
+                    Renderer.render
                         body
                 }
         , head = head meta.frontmatter
@@ -124,7 +122,7 @@ view _ meta =
 viewPage :
     { path : PagePath Pages.PathKey, frontmatter : Metadata }
     -> Document
-    -> { title : String, body : Element Msg }
+    -> { title : String, body : Renderer.Rendered Msg }
 viewPage page document =
     case page.frontmatter of
         Metadata.Page metadata ->
@@ -132,15 +130,10 @@ viewPage page document =
             , body =
                 let
                     rendered =
-                        Renderer.render (Document.Title metadata.title :: document)
+                        Renderer.renderDocument (Document.Title metadata.title :: document)
                 in
-                Element.el
-                    [ Element.padding (Renderer.rem 4)
-                    , Element.width (Element.fill |> Element.maximum (Renderer.rem 52))
-                    , Element.centerX
-                    , Element.Region.mainContent
-                    ]
-                    rendered
+                Renderer.mainContent
+                    [rendered]
             }
 
 
