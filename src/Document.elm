@@ -1,4 +1,4 @@
-module Document exposing (Block(..), Document, Inline(..), Link, Path, Reference, Text, TextStyle, pathFromString)
+module Document exposing (Block(..), Code, CodeLanguage(..), Document, Inline(..), Link, Path, Reference, Text, TextStyle, pathFromString)
 
 import List.Extra as List
 import Pages exposing (PathKey)
@@ -21,6 +21,7 @@ type Inline
     = TextInline Text
     | LinkInline Link
     | ReferenceInline Reference
+    | CodeInline Code
 
 
 type alias Text =
@@ -52,4 +53,14 @@ pathFromString raw =
 type alias Reference =
     { text : List Text
     , path : Path
+    }
+
+
+type CodeLanguage
+    = Bash
+
+
+type alias Code =
+    { text : String
+    , language : CodeLanguage
     }

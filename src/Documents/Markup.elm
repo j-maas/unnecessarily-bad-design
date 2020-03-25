@@ -71,17 +71,7 @@ richTextMark =
         { view = \styles text -> Document.TextInline (convertText styles text)
         , replacements = Mark.commonReplacements
         , inlines =
-            [ linkInline, referenceInline ]
-        }
-
-
-plainTextMark : Mark.Block (List Text)
-plainTextMark =
-    Mark.textWith
-        { view = convertText
-        , replacements = Mark.commonReplacements
-        , inlines =
-            []
+            [ linkInline, referenceInline, bashInline ]
         }
 
 
@@ -142,3 +132,14 @@ pathMark =
                         , message = [ "This reference does not match any of the existing pages." ]
                         }
             )
+
+
+bashInline : Mark.Record Document.Inline
+bashInline =
+    Mark.verbatim "bash"
+        (\code ->
+            Document.CodeInline
+                { text = code
+                , language = Document.Bash
+                }
+        )

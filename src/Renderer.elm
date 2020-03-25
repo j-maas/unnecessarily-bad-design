@@ -181,6 +181,9 @@ renderInline inline =
         Document.ReferenceInline reference ->
             renderReference reference
 
+        Document.CodeInline code ->
+            renderCode code
+
 
 renderText : List Css.Style -> Text -> Rendered msg
 renderText extraStyles text =
@@ -248,3 +251,18 @@ renderReference reference =
                 reference.text
         , url = Pages.PagePath.toString reference.path
         }
+
+
+renderCode : Document.Code -> Rendered msg
+renderCode code =
+    Html.span
+        [ css
+            [ Css.whiteSpace Css.preWrap
+            , Css.fontFamilies [ "Source Code Pro", "monospace" ]
+            , Css.borderRadius (em 0.2)
+            , Css.backgroundColor (Css.hsl 0 0 0.9)
+            , Css.padding (em 0.05)
+            , Css.fontSize (em 0.95)
+            ]
+        ]
+        [ Html.text code.text ]
