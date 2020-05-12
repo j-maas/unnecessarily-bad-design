@@ -33,7 +33,7 @@ manifest =
 
 main : Pages.Platform.Program Model Msg Metadata Document
 main =
-    Pages.Platform.application
+    Pages.Platform.init
         { init = \_ -> init
         , view = view
         , update = update
@@ -41,27 +41,10 @@ main =
         , documents = [ Documents.Markup.document ]
         , manifest = manifest
         , canonicalSiteUrl = canonicalSiteUrl
-        , onPageChange = \_ -> ()
-        , generateFiles = generateFiles
+        , onPageChange = Nothing
         , internals = Pages.internals
         }
-
-
-generateFiles :
-    List
-        { path : PagePath Pages.PathKey
-        , frontmatter : Metadata
-        , body : String
-        }
-    ->
-        List
-            (Result String
-                { path : List String
-                , content : String
-                }
-            )
-generateFiles _ =
-    []
+        |> Pages.Platform.toProgram
 
 
 type alias Model =

@@ -1,30 +1,36 @@
 module Documents.Markup exposing (document)
 
-import Document exposing (..)
+import Document exposing (Block(..), Document, Text)
+import Json.Decode exposing (Decoder)
 import Mark
 import Mark.Error
 import Metadata exposing (Metadata)
-import Pages.Document
 import Url exposing (Url)
 
 
-document : ( String, Pages.Document.DocumentHandler Metadata Document )
+type alias PagesDocument =
+    { extension : String
+    , metadata : Decoder Metadata
+    , body : String -> Result String Document
+    }
+
+
+document : PagesDocument
 document =
-    Pages.Document.parser
-        { extension = "mu"
-        , metadata = Metadata.decoder
-        , body =
-            \rawText ->
-                case Mark.compile bodyDocument rawText of
-                    Mark.Success blocks ->
-                        Ok blocks
+    { extension = "emu"
+    , metadata = Metadata.decoder
+    , body =
+        \rawText ->
+            case Mark.compile bodyDocument rawText of
+                Mark.Success blocks ->
+                    Ok blocks
 
-                    Mark.Almost partial ->
-                        Err (errorsToString partial.errors)
+                Mark.Almost partial ->
+                    Err (errorsToString partial.errors)
 
-                    Mark.Failure errors ->
-                        Err (errorsToString errors)
-        }
+                Mark.Failure errors ->
+                    Err (errorsToString errors)
+    }
 
 
 errorsToString : List Mark.Error.Error -> String
