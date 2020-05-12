@@ -1,4 +1,4 @@
-module Document exposing (Block(..), Code, CodeLanguage(..), Document, Inline(..), Link, Path, Reference, Text, TextStyle, pathFromString)
+module Document exposing (Block(..), Code, CodeLanguage(..), Document, Inline(..), Key(..), Keys, Link, Path, Reference, Text, TextStyle, codeLanguageFromString, keyFromString, keysFromString, pathFromString)
 
 import List.Extra as List
 import Pages exposing (PathKey)
@@ -15,6 +15,7 @@ type Block
     | Heading (List Inline)
     | Subheading (List Inline)
     | Paragraph (List Inline)
+    | CodeBlock Code
 
 
 type Inline
@@ -22,6 +23,7 @@ type Inline
     | LinkInline Link
     | ReferenceInline Reference
     | CodeInline Code
+    | KeysInline Keys
 
 
 type alias Text =
@@ -60,7 +62,79 @@ type CodeLanguage
     = Bash
 
 
+codeLanguageFromString : String -> Maybe CodeLanguage
+codeLanguageFromString raw =
+    case raw of
+        "bash" ->
+            Just Bash
+
+        _ ->
+            Nothing
+
+
 type alias Code =
-    { text : String
+    { src : String
     , language : CodeLanguage
     }
+
+
+type alias Keys =
+    ( Key, List Key )
+
+
+type Key
+    = Letter Char
+    | Tab
+    | Up
+    | Down
+    | Ctrl
+    | Shift
+    | Enter
+
+
+keysFromString : String -> Maybe Keys
+keysFromString raw =
+    case String.split "+" raw of
+        firstRaw :: restRaw ->
+            restRaw
+                |> List.foldl
+                    (\next maybeKeys ->
+                        maybeKeys
+                            |> Maybe.andThen
+                                (\( f, r ) ->
+                                    keyFromString next
+                                        |> Maybe.map (\n -> ( f, r ++ [ n ] ))
+                                )
+                    )
+                    (keyFromString firstRaw |> Maybe.map (\first -> ( first, [] )))
+
+        _ ->
+            Nothing
+
+
+keyFromString : String -> Maybe Key
+keyFromString raw =
+    case String.toList raw of
+        [ char ] ->
+            Just <| Letter char
+
+        [ 'C', 'T', 'R', 'L' ] ->
+            Just Ctrl
+
+        ['S', 'H','I','F','T'] ->
+            Just Shift
+        ['E','N','T','E','R'] -> Just Enter
+
+        [ 'T', 'A', 'B' ] ->
+            Just Tab
+
+        
+        [ 'U', 'P' ] ->
+            Just Up
+
+        [ 'D', 'O', 'W', 'N' ] ->
+            Just Down
+
+
+        _ ->
+            Nothing

@@ -47,6 +47,7 @@ bodyDocument =
             [ headingMark
             , subheadingMark
             , paragraphMark
+            , bashMark
             ]
         )
 
@@ -77,7 +78,11 @@ richTextMark =
         { view = \styles text -> Document.TextInline (convertText styles text)
         , replacements = Mark.commonReplacements
         , inlines =
-            [ linkInline, referenceInline, bashInline ]
+            [ linkInline
+            , referenceInline
+            , bashInline
+            , keyInline
+            ]
         }
 
 
@@ -145,7 +150,38 @@ bashInline =
     Mark.verbatim "bash"
         (\code ->
             Document.CodeInline
-                { text = code
+                { src = code
                 , language = Document.Bash
                 }
         )
+
+
+bashMark : Mark.Block Block
+bashMark =
+    Mark.block "Bash"
+        (\code ->
+            CodeBlock { language = Document.Bash, src = code }
+        )
+        Mark.string
+
+
+keyInline : Mark.Record Document.Inline
+keyInline =
+    Mark.verbatim "key"
+        (\_ key ->
+            Document.KeysInline key
+        )
+        |> Mark.field "c" keyMark
+
+
+keyMark : Mark.Block Document.Keys
+keyMark =
+    Mark.string
+        |> Mark.verify
+            (\str ->
+                Document.keysFromString str
+                    |> Result.fromMaybe
+                        { title = "Invalid key"
+                        , message = [ "This key code is invalid." ]
+                        }
+            )

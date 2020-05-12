@@ -1,6 +1,6 @@
 module Renderer exposing (Rendered, heading, mainContent, paragraph, render, renderDocument, subheading, title)
 
-import Css exposing (em, num, rem, zero)
+import Css exposing (em, num, px, rem, zero)
 import Css.Global
 import Document exposing (..)
 import Html as PlainHtml
@@ -34,6 +34,9 @@ renderDocument blocks =
 
                 Paragraph contents ->
                     paragraph contents
+
+                CodeBlock code ->
+                    codeBlock code
         )
         blocks
         |> document
@@ -53,7 +56,7 @@ mainContent contents =
     Html.main_
         [ css
             [ Css.padding (rem 1)
-            , Css.maxWidth (rem 40)
+            , Css.maxWidth (rem 48)
             , Css.margin Css.auto
             ]
         ]
@@ -185,6 +188,9 @@ renderInline inline =
         Document.CodeInline code ->
             renderCode code
 
+        Document.KeysInline keys ->
+            renderKeys keys
+
 
 renderText : List Css.Style -> Text -> Rendered msg
 renderText extraStyles text =
@@ -199,7 +205,10 @@ renderText extraStyles text =
         styles =
             italic ++ extraStyles
     in
-    if List.isEmpty styles then
+    if text.style.emphasized then
+        Html.em [ css styles ] [ Html.text text.content ]
+
+    else if List.isEmpty styles then
         Html.text text.content
 
     else
@@ -257,13 +266,89 @@ renderReference reference =
 renderCode : Document.Code -> Rendered msg
 renderCode code =
     Html.code
+        [ css [ codeFontStyle, codeBackgroundStyle ]
+        ]
+        [ Html.text code.src ]
+
+
+codeBlock : Document.Code -> Rendered msg
+codeBlock code =
+    Html.pre [ css [ codeBackgroundStyle, Css.padding (em 1) ] ]
+        [ Html.code [ css [ codeFontStyle ] ] [ Html.text code.src ] ]
+
+
+codeFontStyle : Css.Style
+codeFontStyle =
+    Css.batch
+        [ Css.whiteSpace Css.preWrap
+        , Css.fontFamilies [ "Source Code Pro", "monospace" ]
+        ]
+
+
+codeBackgroundStyle : Css.Style
+codeBackgroundStyle =
+    Css.batch
+        [ Css.borderRadius (em 0.2)
+        , Css.backgroundColor (Css.hsl 0 0 0.9)
+        , Css.padding2 (em 0.05) (em 0.2)
+        , Css.fontSize (em 0.95)
+        ]
+
+
+renderKeys : Document.Keys -> Rendered msg
+renderKeys keys =
+    case keys of
+        ( first, [] ) ->
+            renderKey first
+
+        ( first, rest ) ->
+            Html.kbd [ css [ Css.whiteSpace Css.preWrap ] ]
+                (List.map renderKey (first :: rest)
+                    -- \u{200B} is a zero-width space to allow breaking after the +
+                    |> List.intersperse (Html.text "+\u{200B}")
+                )
+
+
+renderKey : Document.Key -> Rendered msg
+renderKey key =
+    let
+        borderColor =
+            Css.hsl 0 0 0.75
+
+        keyText =
+            -- \u{00A0} is a non-breaking space to disallow breaking inside a key
+            case key of
+                Document.Letter l ->
+                    String.fromChar l
+
+                Document.Ctrl ->
+                    "Ctrl"
+
+                Document.Shift ->
+                    "Shift\u{00A0}⇧"
+
+                Document.Enter ->
+                    "Enter\u{00A0}↵"
+
+                Document.Tab ->
+                    "Tab\u{00A0}↹"
+
+                Document.Up ->
+                    "↑\u{00A0}up"
+
+                Document.Down ->
+                    "↓\u{00A0}down"
+    in
+    Html.kbd
         [ css
-            [ Css.whiteSpace Css.preWrap
-            , Css.fontFamilies [ "Source Code Pro", "monospace" ]
+            [ codeFontStyle
+            , Css.fontSize (em 0.8)
+            , Css.padding2 (em 0) (em 0.1)
+            , Css.border3 (px 1) Css.solid borderColor
             , Css.borderRadius (em 0.2)
-            , Css.backgroundColor (Css.hsl 0 0 0.9)
-            , Css.padding2 (em 0.05) (em 0.2)
-            , Css.fontSize (em 0.95)
+            , Css.boxShadow5 Css.inset zero (px -1) zero borderColor
+            , Css.verticalAlign Css.center
+            , Css.whiteSpace Css.pre
             ]
         ]
-        [ Html.text code.text ]
+        [ Html.text keyText ]
