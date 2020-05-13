@@ -1,8 +1,9 @@
-module Document exposing (Block(..), Code, CodeLanguage(..), Document, Inline(..), Key(..), Keys, Link, Path, Reference, Text, TextStyle, codeLanguageFromString, keyFromString, keysFromString, pathFromString)
+module Document exposing (Block(..), Code, CodeLanguage(..), Document, Image, ImagePath, Inline(..), Key(..), Keys, Link, Path, Reference, Text, TextStyle, codeLanguageFromString, imagePathFromString, keyFromString, keysFromString, pathFromString)
 
 import List.Extra as List
 import Pages exposing (PathKey)
-import Pages.PagePath exposing (PagePath)
+import Pages.ImagePath
+import Pages.PagePath
 import Url exposing (Url)
 
 
@@ -16,6 +17,7 @@ type Block
     | Subheading (List Inline)
     | Paragraph (List Inline)
     | CodeBlock Code
+    | ImageBlock Image
 
 
 type Inline
@@ -44,7 +46,7 @@ type alias Link =
 
 
 type alias Path =
-    PagePath PathKey
+    Pages.PagePath.PagePath PathKey
 
 
 pathFromString : String -> Maybe Path
@@ -121,20 +123,37 @@ keyFromString raw =
         [ 'C', 'T', 'R', 'L' ] ->
             Just Ctrl
 
-        ['S', 'H','I','F','T'] ->
+        [ 'S', 'H', 'I', 'F', 'T' ] ->
             Just Shift
-        ['E','N','T','E','R'] -> Just Enter
+
+        [ 'E', 'N', 'T', 'E', 'R' ] ->
+            Just Enter
 
         [ 'T', 'A', 'B' ] ->
             Just Tab
 
-        
         [ 'U', 'P' ] ->
             Just Up
 
         [ 'D', 'O', 'W', 'N' ] ->
             Just Down
 
-
         _ ->
             Nothing
+
+
+type alias ImagePath =
+    Pages.ImagePath.ImagePath PathKey
+
+
+type alias Image =
+    { src : ImagePath
+    , alt : String
+    , caption : List Inline
+    , credit : List Inline
+    }
+
+
+imagePathFromString : String -> Maybe ImagePath
+imagePathFromString raw =
+    List.find (\page -> raw == Pages.ImagePath.toString page) Pages.allImages

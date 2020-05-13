@@ -48,6 +48,7 @@ bodyDocument =
             , subheadingMark
             , paragraphMark
             , bashMark
+            , imageMark
             ]
         )
 
@@ -183,5 +184,36 @@ keyMark =
                     |> Result.fromMaybe
                         { title = "Invalid key"
                         , message = [ "This key code is invalid." ]
+                        }
+            )
+
+
+imageMark : Mark.Block Block
+imageMark =
+    Mark.record "Image"
+        (\src alt caption credit->
+            Document.ImageBlock
+                { src = src
+                , alt = alt
+                , caption = caption
+                , credit = credit
+                }
+        )
+        |> Mark.field "src" imagePathMark
+        |> Mark.field "alt" Mark.string
+        |> Mark.field "caption" richTextMark
+        |> Mark.field "credit" richTextMark
+        |> Mark.toBlock
+
+
+imagePathMark : Mark.Block Document.ImagePath
+imagePathMark =
+    Mark.string
+        |> Mark.verify
+            (\str ->
+                Document.imagePathFromString str
+                    |> Result.fromMaybe
+                        { title = "Invalid image path"
+                        , message = [ "This path does not refer to an image." ]
                         }
             )

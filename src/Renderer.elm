@@ -1,11 +1,12 @@
 module Renderer exposing (Rendered, heading, mainContent, paragraph, render, renderDocument, subheading, title)
 
-import Css exposing (em, num, px, rem, zero)
+import Css exposing (em, num, pct, px, rem, vh, zero)
 import Css.Global
 import Document exposing (..)
 import Html as PlainHtml
 import Html.Styled as Html exposing (Html)
-import Html.Styled.Attributes as HtmlAttributes exposing (css)
+import Html.Styled.Attributes as Attributes exposing (css)
+import Pages.ImagePath as ImagePath
 import Pages.PagePath
 import Url
 
@@ -37,6 +38,9 @@ renderDocument blocks =
 
                 CodeBlock code ->
                     codeBlock code
+
+                ImageBlock image ->
+                    imageBlock image
         )
         blocks
         |> document
@@ -100,7 +104,7 @@ document contents =
                 , paragraphs
                     [ Css.Global.adjacentSiblings
                         [ paragraphs
-                            [ Css.marginTop (rem 0.5)
+                            [ Css.marginTop paragraphSpacing
                             ]
                         ]
                     ]
@@ -108,6 +112,11 @@ document contents =
             ]
         ]
         contents
+
+
+paragraphSpacing : Css.Rem
+paragraphSpacing =
+    rem 1
 
 
 title : String -> Rendered msg
@@ -167,8 +176,15 @@ paragraph content =
 paragraphStyle : Css.Style
 paragraphStyle =
     Css.batch
-        [ Css.fontFamilies [ "Asap", "sans-serif" ]
+        [ paragraphFontStyle
         , Css.margin zero
+        ]
+
+
+paragraphFontStyle : Css.Style
+paragraphFontStyle =
+    Css.batch
+        [ Css.fontFamilies [ "Asap", "sans-serif" ]
         , Css.lineHeight (num 1.35)
         ]
 
@@ -233,13 +249,13 @@ viewLink { text, url } =
             Css.inherit
     in
     Html.a
-        [ HtmlAttributes.href url
+        [ Attributes.href url
         , css
             [ Css.color unvisitedColor
             , Css.visited
                 [ Css.color visitedColor
                 ]
-            , Css.hover
+            , hover
                 [ Css.textDecorationStyle Css.dotted
                 ]
             ]
@@ -352,3 +368,63 @@ renderKey key =
             ]
         ]
         [ Html.text keyText ]
+
+
+imageBlock : Document.Image -> Rendered msg
+imageBlock image =
+    let
+        spacing =
+            -- rem
+            0.5
+    in
+    Html.figure
+        [ css
+            [ Css.margin2 paragraphSpacing (rem -spacing)
+            , Css.padding2 (rem 0.5) (rem spacing)
+            , Css.borderTop3 (px 1) Css.solid (Css.hsla 0 0 0 0.25)
+            , Css.borderBottom3 (px 1) Css.solid (Css.hsla 0 0 0 0.25)
+            , Css.borderRadius (rem spacing)
+            , paragraphFontStyle
+            , Css.displayFlex
+            , Css.flexDirection Css.column
+            , Css.alignItems Css.center
+            ]
+        ]
+        [ Html.img
+            [ Attributes.src (ImagePath.toString image.src)
+            , Attributes.alt image.alt
+            , css
+                [ Css.maxWidth (pct 100)
+                , Css.maxHeight (vh 50)
+                , Css.boxShadow4 zero (em 0.1) (em 0.2) (Css.hsla 0 0 0 0.25)
+                ]
+            ]
+            []
+        , Html.figcaption
+            [ css [ Css.marginTop (rem 0.5) ] ]
+            (List.map renderInline image.caption)
+        , Html.cite
+            [ css
+                [ Css.marginTop (rem 0.25)
+                , Css.fontStyle Css.normal
+                , Css.fontSize (em 0.9)
+                , Css.opacity (num 0.5)
+                , Css.display Css.inlineBlock
+                , Css.maxWidth (pct 90)
+                , Css.alignSelf Css.end
+                , Css.textAlign Css.end
+                , hover
+                    [ Css.opacity (num 1)
+                    ]
+                ]
+            ]
+            (List.map renderInline image.credit)
+        ]
+
+
+hover : List Css.Style -> Css.Style
+hover styles =
+    Css.batch
+        [ Css.hover styles
+        , Css.focus styles
+        ]
