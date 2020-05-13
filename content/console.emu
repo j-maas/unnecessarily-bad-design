@@ -3,9 +3,9 @@ type: page
 title: How to use the console
 ---
 
-What's the simplest way to interact with a computer? No, not what you're most used to, not moving the mouse and clicking boxes on screen. What's the simplest way to tell a computer what you want?
+What's the simplest way to interact with a computer? No, not moving the mouse and clicking boxes on screen. You're used to it now, but the computer is doing a lot of work for this. Imagine you don't have a screen, only a printer and a keyboard. What's an even simpler way of telling the computer what you want?
 
-Write what you want. As text.
+Text. Write what you want.
 
 That's exactly what the console does. You write what you want and the computer writes back.
 
@@ -14,13 +14,13 @@ That's exactly what the console does. You write what you want and the computer w
 
 To copy a file you tell the computer "copy this file to there." To let it list you all files in a folder you tell it "list everything with all info." To remove a folder, you tell it "remove this folder and everything in it."
 
-Ok, I lied a bit. Unfortunately, computers don't yet reliably understand the way we talk and write normally. But we simply need to structure our questions in a certain manner---meet them halfway. What you really write is `cp thisFile.txt there.txt`{bash}, `ls -l`{bash} and `rm -r thisFolder`{bash}.
+Ok, I lied a bit. Unfortunately, computers don't yet reliably understand the way we talk and write. But we can simply structure our questions in a certain manner---meet them halfway. To do the things mentioned before, you really write is `cp thisFile.txt there.txt`{bash}, `ls -l`{bash} and `rm -r thisFolder`{bash}.
 
-The structure is that you call a program and give it arguments that describe how it should do its job. So the copy program, `cp`{bash}, needs to know which file to copy where. `ls`{bash} wants to know whether it should present the files in a compact list or a table with all information. And `rm`{bash} needs to know that it is dealing with a folder and should really delete everything inside.
+What's going on there? The idea is that you call a program and describe how it should do its job. So the copy program, `cp`{bash}, needs to know which file to copy where. `ls`{bash} wants to know whether it should present the files in a compact list or a table with all information. And `rm`{bash} needs to know that it is dealing with a folder and should really delete everything inside.
 
-You'll notice that there is two types of arguments. There were the file names and there was this thing with the dash in front, e.g. `-l`{bash}. Some programs expect their arguments in a specific order. For example, `cp`{bash} wants the file to copy first and then the destination to copy it to. Other times you have to specify what kind of argument you are giving. `ls`{bash} takes many different arguments, for example to also show hidden files, `-a`{bash}. So these arguments have names that typically start with a dash.
+You tell a program how to do its job using arguments. You'll notice that there are two types of arguments. There were the file names and there was this thing with the dash in front, e.g. `-l`{bash}. Some programs expect their arguments in a specific order. For example, `cp`{bash} wants the file to copy first and then the destination to copy it to. Other times you have to specify what kind of argument you are giving. `ls`{bash} takes many different arguments, for example to also show hidden files, `-a`{bash}. So these arguments have names that typically start with a dash.
 
-What does the answer look like? If you're lucky, nothing. Seriously. For example, if `cp`{bash} does its job, it gives no output. Only if it could not copy a file, e.g. because the file you wanted to copy does not actually exist, will it print what the problem was. So don't panic if you don't see a confirmation. Of course, programs like `ls`{bash} are an exception to this. Their job is to print out information to you.
+What does the answer look like? If you're lucky, nothing. Seriously. For example, if `cp`{bash} does its job, it gives no output. Only if it could not copy a file, e.g., because the file you wanted to copy does not actually exist, will it print what the problem was. So don't panic if you don't see a confirmation. Of course, programs like `ls`{bash} are an exception to this. Their job is to print out information to you.
 
 |> Heading
     Paths: Moving around files and moving files around
