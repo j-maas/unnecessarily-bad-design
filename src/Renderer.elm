@@ -1,4 +1,4 @@
-module Renderer exposing (Rendered, heading, mainContent, paragraph, render, renderDocument, subheading, title)
+module Renderer exposing (Rendered, body, heading, mainContent, navigation, paragraph, render, renderDocument, subheading, title)
 
 import Css exposing (em, num, pct, px, rem, vh, zero)
 import Css.Global
@@ -6,8 +6,9 @@ import Document exposing (..)
 import Html as PlainHtml
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attributes exposing (css)
+import Pages
 import Pages.ImagePath as ImagePath
-import Pages.PagePath
+import Pages.PagePath as PagePath
 import Url
 
 
@@ -17,6 +18,41 @@ type alias Rendered msg =
 
 
 -- Render
+
+
+body : List (Rendered msg) -> Rendered msg
+body content =
+    Html.div
+        [ css
+            [ Css.padding (rem 1)
+            , Css.maxWidth (rem 48)
+            , Css.margin Css.auto
+            , bodyFontStyle
+            ]
+        ]
+        content
+
+
+type alias PagePath =
+    PagePath.PagePath Pages.PathKey
+
+
+navigation : PagePath -> Rendered msg
+navigation index =
+    Html.nav
+        [ css [ Css.marginBottom (rem 1) ]
+        ]
+        [ navLink index "Go back to overview"
+        ]
+
+
+navLink : PagePath -> String -> Rendered msg
+navLink path text =
+    viewLink
+        { url = PagePath.toString path
+        , text = [ Html.text text ]
+        , styles = [ Css.fontStyle Css.italic ]
+        }
 
 
 renderDocument : Document -> Rendered msg
@@ -57,14 +93,7 @@ render content =
 
 mainContent : List (Rendered msg) -> Rendered msg
 mainContent contents =
-    Html.main_
-        [ css
-            [ Css.padding (rem 1)
-            , Css.maxWidth (rem 48)
-            , Css.margin Css.auto
-            ]
-        ]
-        contents
+    Html.main_ [] contents
 
 
 
@@ -181,11 +210,15 @@ paragraphStyle =
         ]
 
 
+bodyFontStyle : Css.Style
+bodyFontStyle =
+    Css.fontFamilies [ "Asap", "sans-serif" ]
+
+
 paragraphFontStyle : Css.Style
 paragraphFontStyle =
     Css.batch
-        [ Css.fontFamilies [ "Asap", "sans-serif" ]
-        , Css.lineHeight (num 1.35)
+        [ Css.lineHeight (num 1.35)
         ]
 
 
@@ -236,11 +269,12 @@ renderLink link =
     viewLink
         { text = List.map (renderText []) link.text
         , url = Url.toString link.url
+        , styles = []
         }
 
 
-viewLink : { text : List (Rendered msg), url : String } -> Rendered msg
-viewLink { text, url } =
+viewLink : { text : List (Rendered msg), url : String, styles : List Css.Style } -> Rendered msg
+viewLink { text, url, styles } =
     let
         unvisitedColor =
             Css.rgb 22 22 162
@@ -251,14 +285,16 @@ viewLink { text, url } =
     Html.a
         [ Attributes.href url
         , css
-            [ Css.color unvisitedColor
-            , Css.visited
+            ([ Css.color unvisitedColor
+             , Css.visited
                 [ Css.color visitedColor
                 ]
-            , hover
+             , hover
                 [ Css.textDecorationStyle Css.dotted
                 ]
-            ]
+             ]
+                ++ styles
+            )
         ]
         text
 
@@ -275,7 +311,8 @@ renderReference reference =
                     ]
                 )
                 reference.text
-        , url = Pages.PagePath.toString reference.path
+        , url = PagePath.toString reference.path
+        , styles = []
         }
 
 
@@ -401,7 +438,11 @@ imageBlock image =
             ]
             []
         , Html.figcaption
-            [ css [ Css.marginTop (rem 0.5) ] ]
+            [ css
+                [ Css.marginTop (rem 0.5)
+                , Css.alignSelf Css.start
+                ]
+            ]
             (List.map renderInline image.caption)
         , Html.cite
             [ css

@@ -31,7 +31,7 @@ What does the answer look like? If you're lucky, nothing. Seriously. For example
 |> Heading
     Paths: Moving around files and moving files around
 
-The console was used in a time before displays. It was literally a printer where you typed on a keyboard and it would print out the response line by line. So you couldn't just drag a file to the trash bin to delete it. You couldn't even open a folder and see all the files inside!
+Imagine you sat in front of an old teleprinter. Literally a printer where you typed on a keyboard and it would print out the response line by line. So you couldn't just drag a file to the trash bin on a video screen to delete it, and you couldn't open a folder and see previews of the images inside.
 
 Instead, the console is always in a /working directory/. By default it opens your user folder. If the working directory contains a file `readme.txt`{bash}, then you could remove it simply by giving its name, `rm readme.txt`{bash}. This works, because the console looks up file names relative to its working directory.
 

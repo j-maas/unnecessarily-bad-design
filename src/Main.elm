@@ -110,11 +110,23 @@ viewPage page document =
             { title = metadata.title
             , body =
                 let
+                    navigation =
+                        -- Do not display navigation on the index.
+                        if pages.index == page.path then
+                            []
+
+                        else
+                            [ Renderer.navigation pages.index ]
+
                     rendered =
                         Renderer.renderDocument (Document.Title metadata.title :: document)
                 in
-                Renderer.mainContent
-                    [ rendered ]
+                Renderer.body
+                    (navigation
+                        ++ [ Renderer.mainContent
+                                [ rendered ]
+                           ]
+                    )
             }
 
 
