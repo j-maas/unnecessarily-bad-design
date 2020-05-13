@@ -21,9 +21,9 @@ manifest =
     , categories = [ Pages.Manifest.Category.education ]
     , displayMode = Manifest.Standalone
     , orientation = Manifest.Portrait
-    , description = "Learn to create good software"
+    , description = siteTagline
     , iarcRatingId = Nothing
-    , name = "How to program"
+    , name = siteName
     , themeColor = Nothing
     , startUrl = pages.index
     , shortName = Nothing
@@ -120,9 +120,7 @@ viewPage page document =
 
 commonHeadTags : List (Head.Tag Pages.PathKey)
 commonHeadTags =
-    [ Head.rssLink "/blog/feed.xml"
-    , Head.sitemapLink "/sitemap.xml"
-    ]
+    []
 
 
 {-| <https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards>
@@ -137,7 +135,7 @@ head metadata =
                 Metadata.Page meta ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
-                        , siteName = "elm-pages-starter"
+                        , siteName = siteName
                         , image =
                             { url = images.iconPng
                             , alt = "elm-pages logo"
@@ -145,7 +143,7 @@ head metadata =
                             , mimeType = Nothing
                             }
                         , description = siteTagline
-                        , locale = Nothing
+                        , locale = Just "en"
                         , title = meta.title
                         }
                         |> Seo.website
@@ -157,6 +155,11 @@ canonicalSiteUrl =
     "https://elm-pages-starter.netlify.com"
 
 
+siteName : String
+siteName =
+    "How to program"
+
+
 siteTagline : String
 siteTagline =
-    "Starter blog for elm-pages"
+    "Learn to create good programs"
