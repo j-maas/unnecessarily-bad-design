@@ -174,4 +174,4 @@ siteName =
 
 siteTagline : String
 siteTagline =
-    "Learn to create good programs"
+    "Everything you didn't know you needed to know about programming."
