@@ -457,7 +457,7 @@ imageBlock image =
                 , Css.display Css.inlineBlock
                 , Css.maxWidth (pct 90)
                 , Css.alignSelf Css.flexEnd
-                , Css.textAlign Css.flexEnd
+                , Css.textAlign Css.end
                 , hover
                     [ Css.opacity (num 1)
                     ]
