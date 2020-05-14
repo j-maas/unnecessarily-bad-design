@@ -274,10 +274,10 @@ imagePathMark =
 noteInline : Mark.Record (Result (List Mark.Error.Error) Document.Inline)
 noteInline =
     Mark.verbatim "note"
-        (\raw slug ->
+        (\raw ->
             case Mark.compile flatInlineDocument raw of
                 Mark.Success inlines ->
-                    Ok (Document.Note inlines slug)
+                    Ok (Document.Note inlines)
 
                 Mark.Almost partial ->
                     Err partial.errors
@@ -285,7 +285,6 @@ noteInline =
                 Mark.Failure errors ->
                     Err errors
         )
-        |> Mark.field "slug" Mark.string
 
 
 flatInlineDocument : Mark.Document (List Document.FlatInline)

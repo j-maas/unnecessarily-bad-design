@@ -24,7 +24,7 @@ type Block
 -}
 type Inline
     = FlatInline FlatInline
-    | Note (List FlatInline) String
+    | Note (List FlatInline)
 
 
 type FlatInline

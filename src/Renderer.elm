@@ -228,8 +228,8 @@ renderInline inline =
         Document.FlatInline plain ->
             renderFlatInline plain
 
-        Document.Note content slug ->
-            renderNote content slug
+        Document.Note content ->
+            renderNote content
 
 
 renderFlatInline : FlatInline -> Rendered msg
@@ -489,8 +489,8 @@ framedStyle =
 
 {-| This solution to notes is inspired by <https://edwardtufte.github.io/tufte-css/#sidenotes>
 -}
-renderNote : List FlatInline -> String -> Rendered msg
-renderNote content slug =
+renderNote : List FlatInline -> Rendered msg
+renderNote content =
     Html.span
         [ css
             [ Css.Global.children
@@ -505,16 +505,10 @@ renderNote content slug =
                 ]
             ]
         ]
-        [ Html.label
-            [ css [ Css.cursor Css.pointer ]
-            , Attributes.for slug
-            ]
-            [ Html.text "⊕"
-            ]
-        , Html.input
+        [ Html.input
             [ Attributes.type_ "checkbox"
-            , Attributes.id slug
-            , css [ Css.display Css.none ]
+            , Attributes.attribute "aria-label" "Toggle whether note is shown"
+            , css [ Css.verticalAlign Css.middle ]
             ]
             []
         , Html.span
