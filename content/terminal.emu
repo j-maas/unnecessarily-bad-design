@@ -1,21 +1,23 @@
 ---
 type: page
-title: How to use the console
+title: How to use the terminal
 ---
 
 What's the simplest way to interact with a computer? No, not moving the mouse and clicking boxes on screen. You're used to it now, but the computer is doing a lot of work for this. Imagine you don't have a screen, only a printer and a keyboard. What's an even simpler way of telling the computer what you want?
 
 |> Image
-    src=images/console/teleprinter.jpg
+    src=images/terminal/teleprinter.jpg
     alt=A man sitting in front of what looks like typewriter out the top of which a sheet of paper emerges. Behind him is a big cupboard-like machine.
     width=490
     height=500
     credit=[from Flickr]{link|url=https://www.flickr.com/photos/39821974@N06/4081725004/} by [Newcastle Libraries]{link|url=https://www.flickr.com/photos/39821974@N06/} under [public domain]{link|url=https://creativecommons.org/publicdomain/mark/1.0/} 
-    caption=In 1975, you could use this typewriter-like machine to use a computer. There's no screen, but it can print onto the piece of paper sticking out from the top. The actual computer is visible in the background.
+    caption=In 1975, you could use this typewriter-like machine called a teleprinter to use a computer. There's no screen, but it can print onto the piece of paper sticking out from the top. The actual computer is visible in the background.
 
 The simplest method is text. Write what you want.
 
-That's exactly what the console does. You write what you want and the computer writes back. Even though this idea is really simple, it works so well that it is still being used today!
+That's exactly what the terminal does. You write what you want and the computer writes back. Even though this idea is really simple, it works so well that it is still being used today!
+
+As a quick sidenote, terminals are sometimes also called /consoles/ or /shells/. Most of the time, people mean the same thing. `However, [technically there is a difference]{link|url=https://superuser.com/a/144668}. A [shell]{link|url=https://en.wikipedia.org/wiki/Shell_(computing)} is the part that does the actual work. A [terminal]{link|url=https://en.wikipedia.org/wiki/Computer_terminal} is the setup you use to use the shell, for example a keyboard and screen, though it could also be a teleprinter. A [console]{link|url=https://en.wikipedia.org/wiki/System_console} was a special type of terminal that would typically be plugged into a special connector of the computer. Now that our terminals are software, the distinction between terminal and console is blurred and that's why those term might be used to mean the same thing.`{note|slug=different-terms}
 
 |> Heading
     Programs: What can I ask for?
@@ -35,11 +37,11 @@ What does the answer look like? If you're lucky, nothing. Seriously. For example
 
 Imagine you sat in front of an old teleprinter. Literally a printer where you typed on a keyboard and it would print out the response line by line. So you couldn't just drag a file to the trash bin on a video screen to delete it, and you couldn't open a folder and see previews of the images inside.
 
-Instead, the console is always in a /working directory/. By default it opens your user folder. If the working directory contains a file `readme.txt`{bash}, then you could remove it simply by giving its name, `rm readme.txt`{bash}. This works, because the console looks up file names relative to its working directory.
+Instead, the terminal is always in a /working directory/. By default it opens your user folder. If the working directory contains a file `readme.txt`{bash}, then you could remove it simply by giving its name, `rm readme.txt`{bash}. This works, because the terminal looks up file names relative to its working directory.
 
-How do you open the file `findme.txt`{bash} that's inside the folder `hiddenStuff`{bash}? You can tell the console how to get to the file using a /path/. In our example, the path would be `hiddenStuff/findme.txt`{bash}. So you tell the console which folders to go into, separated by slashes, `/`{bash}, and then you give it the file name. If you want to remove a file that is multiple folders away, the command could look like `rm firstFolder/secondFolder/thirdFolder/file.txt`{bash}.
+How do you open the file `findme.txt`{bash} that's inside the folder `hiddenStuff`{bash}? You can tell the terminal how to get to the file using a /path/. In our example, the path would be `hiddenStuff/findme.txt`{bash}. So you tell the terminal which folders to go into, separated by slashes, `/`{bash}, and then you give it the file name. If you want to remove a file that is multiple folders away, the command could look like `rm firstFolder/secondFolder/thirdFolder/file.txt`{bash}.
 
-All of these paths are relative to the working directory that the console is currently inside of. So all your images are available, but what if you need to access your USB drive? That is not inside your user folder. How do you access those?
+All of these paths are relative to the working directory that the terminal is currently inside of. So all your images are available, but what if you need to access your USB drive? That is not inside your user folder. How do you access those?
 
 The paths I showed you are relative. But of course every file has a unique path when you start at the first folder, the /root directory/. The `homework.txt`{bash} on your USB drive is available at `/dev/sda1/homework.txt`{bash}. So if you start at the root folder, your USB drive is available inside the `dev`{bash} folder and then inside the `sda1`{bash} folder. Every path that starts with a slash is an absolute path that start at the root directory! Paths that start with a folder or file name are relative paths that start at the working directory.
 
@@ -54,7 +56,7 @@ Now it gets interesting because we change the working directory. The program tha
 
 Since people are lazy, they try to keep everything short. "Copy" becomes `cp`{bash}, "list" becomes `ls`{bash}, "show all files, including hidden ones" becomes `-a`{bash}. So it might be a bit difficult to guess or even remember how everything was called exactly.
 
-But luckily, most programs have a "manual" on how to use their programs. And it's available as a console program, `man`{bash}! If you forget how to use `cp`{bash}, `man cp`{bash} will list you all options that are available. Many programs also offer a flag that displays some helpful information, typically called `--help`{bash}. So `cp --help`{bash} will show you what flags and options are available and how it's used. There is no better one, those are just two different ways that programs might give you help.
+But luckily, most programs have a "manual" on how to use their programs. And it's available as a terminal program, `man`{bash}! If you forget how to use `cp`{bash}, `man cp`{bash} will list you all options that are available. Many programs also offer a flag that displays some helpful information, typically called `--help`{bash}. So `cp --help`{bash} will show you what flags and options are available and how it's used. There is no better one, those are just two different ways that programs might give you help.
 
 You also need to know how to read certain aspects of the help text. As an example, here is a snippet of what `ls --help`{bash} returns:
 
@@ -97,14 +99,14 @@ Installing new software on your Ubuntu (that's a Linux operating system flavor) 
 
 But logging out from your typical account, loggin in with the admin account, installing the software, and then switching accounts back again is really tedious. So Ubuntu has the `sudo` mechanism. It let's you switch the accounts very quickly and just one command as the admin.
 
-The first time you use `sudo apt install awesome-software`{bash}, it will ask for your password. If you entered it correctly, it will run `apt install awesome-software`{bash} with admin rights. Then the console is back under your account. It will even remember the password for a while, so running `sudo apt install other-thing`{bash} won't bother you with the password again. But when you close the console and reopen it, you'll need to enter the password again.
+The first time you use `sudo apt install awesome-software`{bash}, it will ask for your password. If you entered it correctly, it will run `apt install awesome-software`{bash} with admin rights. Then the terminal is back under your account. It will even remember the password for a while, so running `sudo apt install other-thing`{bash} won't bother you with the password again. But when you close the terminal and reopen it, you'll need to enter the password again.
 
 |> Heading
     Pipes: All for one, one for all
 
 You can make programs work together! What one programs prints out, you can feed into the text. Sounds like a bad idea? Actually it works pretty nicely in many cases.
 
-As an example, we can print the contents of a file and then check whether a certain word is contained in the text. To print a file, use `cat`{bash}. That stands for con/cat/enate which means to add to the back of something, in this case concatenating the file content to the bottom of the console. `cat file`{bash} will print out the contents of `file`{bash}.
+As an example, we can print the contents of a file and then check whether a certain word is contained in the text. To print a file, use `cat`{bash}. That stands for con/cat/enate which means to add to the back of something, in this case concatenating the file content to the bottom of the terminal. `cat file`{bash} will print out the contents of `file`{bash}.
 
 `grep`{bash} (meaning "/g/lobal///r/egular /e/xpression///p/rint") will go through some text line by line and print out only the lines containing a pattern. If given the text
 
@@ -133,7 +135,7 @@ But it's not too bad. All consoles still provide you programs that you can call 
 |> Heading
     Tricks: Complete historic kill
 
-When you have to work with the console more often, you might benefit from some tricks that many consoles offer. Try them out to see whether they are supported in the console you use.
+When you have to work with the terminal more often, you might benefit from some tricks that many consoles offer. Try them out to see whether they are supported in the terminal you use.
 
 Most consoles will allow you to enter part of a file name and hit ``{key|c=TAB} which triggers them to fill out the rest of the file name for you. If there are multiple options that start with what you have typed so far, it won't pick one at random. Hit ``{key|c=TAB} twice to show a list of available files. Continue to type out the file name you want until you can ``{key|c=TAB} it to completion. Completion usually also works for programs and arguments.
 

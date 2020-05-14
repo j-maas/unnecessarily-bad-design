@@ -225,6 +225,16 @@ paragraphFontStyle =
 renderInline : Inline -> Rendered msg
 renderInline inline =
     case inline of
+        Document.FlatInline plain ->
+            renderFlatInline plain
+
+        Document.Note content slug ->
+            renderNote content slug
+
+
+renderFlatInline : FlatInline -> Rendered msg
+renderFlatInline inline =
+    case inline of
         Document.TextInline text ->
             renderText [] text
 
@@ -410,18 +420,11 @@ renderKey key =
 
 imageBlock : Document.Image -> Rendered msg
 imageBlock image =
-    let
-        spacing =
-            -- rem
-            0.5
-    in
     Html.figure
         [ css
-            [ Css.margin2 paragraphSpacing (rem -spacing)
-            , Css.padding2 (rem 0.5) (rem spacing)
-            , Css.borderTop3 (px 1) Css.solid (Css.hsla 0 0 0 0.25)
-            , Css.borderBottom3 (px 1) Css.solid (Css.hsla 0 0 0 0.25)
-            , Css.borderRadius (rem spacing)
+            [ Css.margin2 paragraphSpacing zero
+            , Css.padding2 (rem 0.5) zero
+            , framedStyle
             , paragraphFontStyle
             , Css.displayFlex
             , Css.flexDirection Css.column
@@ -464,6 +467,65 @@ imageBlock image =
                 ]
             ]
             (List.map renderInline image.credit)
+        ]
+
+
+framedStyle : Css.Style
+framedStyle =
+    let
+        spacing =
+            0.5
+    in
+    Css.batch
+        [ Css.borderTop3 (px 1) Css.solid (Css.hsla 0 0 0 0.25)
+        , Css.borderBottom3 (px 1) Css.solid (Css.hsla 0 0 0 0.25)
+        , Css.borderRadius (rem spacing)
+        , Css.marginLeft (rem -spacing)
+        , Css.marginRight (rem -spacing)
+        , Css.paddingLeft (rem spacing)
+        , Css.paddingRight (rem spacing)
+        ]
+
+
+{-| This solution to notes is inspired by <https://edwardtufte.github.io/tufte-css/#sidenotes>
+-}
+renderNote : List FlatInline -> String -> Rendered msg
+renderNote content slug =
+    Html.span
+        [ css
+            [ Css.Global.children
+                [ Css.Global.typeSelector "input"
+                    [ Css.pseudoClass "checked"
+                        [ Css.Global.adjacentSiblings
+                            [ Css.Global.typeSelector "span"
+                                [ Css.display Css.block ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+        [ Html.label
+            [ css [ Css.cursor Css.pointer ]
+            , Attributes.for slug
+            ]
+            [ Html.text "⊕"
+            ]
+        , Html.input
+            [ Attributes.type_ "checkbox"
+            , Attributes.id slug
+            , css [ Css.display Css.none ]
+            ]
+            []
+        , Html.span
+            [ css
+                [ Css.display Css.none
+                , Css.padding2 (em 0.25) zero
+                , framedStyle
+                , Css.margin2 (rem 0.5) (rem 1)
+                ]
+            ]
+            (List.map renderFlatInline content)
         ]
 
 

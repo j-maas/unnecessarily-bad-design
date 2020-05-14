@@ -76,15 +76,59 @@ paragraphMark =
 richTextMark : Mark.Block (List Document.Inline)
 richTextMark =
     Mark.textWith
+        { view = \styles text -> Ok <| Document.FlatInline <| Document.TextInline (convertText styles text)
+        , replacements = Mark.commonReplacements
+        , inlines =
+            flatInlines (Ok << Document.FlatInline)
+                ++ [ noteInline
+                   ]
+        }
+        |> Mark.verify
+            (\results ->
+                List.foldl
+                    (\next result ->
+                        case ( next, result ) of
+                            ( Ok inline, Ok inlines ) ->
+                                Ok (inlines ++ [ inline ])
+
+                            ( Err errors, Err previousErrors ) ->
+                                Err (previousErrors ++ errors)
+
+                            ( Err errors, Ok _ ) ->
+                                Err errors
+
+                            ( Ok _, Err errors ) ->
+                                Err errors
+                    )
+                    (Ok [])
+                    results
+                    |> Result.mapError
+                        (\errors ->
+                            { title = "Invalid annotation"
+                            , message =
+                                [ errorsToString errors ]
+                            }
+                        )
+            )
+
+
+flatTextMark : Mark.Block (List Document.FlatInline)
+flatTextMark =
+    Mark.textWith
         { view = \styles text -> Document.TextInline (convertText styles text)
         , replacements = Mark.commonReplacements
         , inlines =
-            [ linkInline
-            , referenceInline
-            , bashInline
-            , keyInline
-            ]
+            flatInlines identity
         }
+
+
+flatInlines : (Document.FlatInline -> a) -> List (Mark.Record a)
+flatInlines mapping =
+    [ linkInline mapping
+    , referenceInline mapping
+    , bashInline mapping
+    , keyInline mapping
+    ]
 
 
 convertText : Mark.Styles -> String -> Text
@@ -96,14 +140,15 @@ convertText styles text =
     }
 
 
-linkInline : Mark.Record Document.Inline
-linkInline =
+linkInline : (Document.FlatInline -> a) -> Mark.Record a
+linkInline mapping =
     Mark.annotation "link"
         (\styledContents url ->
             Document.LinkInline
                 { text = List.map (\( styles, text ) -> convertText styles text) styledContents
                 , url = url
                 }
+                |> mapping
         )
         |> Mark.field "url" urlMark
 
@@ -121,14 +166,15 @@ urlMark =
             )
 
 
-referenceInline : Mark.Record Document.Inline
-referenceInline =
+referenceInline : (Document.FlatInline -> a) -> Mark.Record a
+referenceInline mapping =
     Mark.annotation "ref"
         (\styledContents path ->
             Document.ReferenceInline
                 { text = List.map (\( styles, text ) -> convertText styles text) styledContents
                 , path = path
                 }
+                |> mapping
         )
         |> Mark.field "path" pathMark
 
@@ -146,14 +192,15 @@ pathMark =
             )
 
 
-bashInline : Mark.Record Document.Inline
-bashInline =
+bashInline : (Document.FlatInline -> a) -> Mark.Record a
+bashInline mapping =
     Mark.verbatim "bash"
         (\code ->
             Document.CodeInline
                 { src = code
                 , language = Document.Bash
                 }
+                |> mapping
         )
 
 
@@ -166,11 +213,12 @@ bashMark =
         Mark.string
 
 
-keyInline : Mark.Record Document.Inline
-keyInline =
+keyInline : (Document.FlatInline -> a) -> Mark.Record a
+keyInline mapping =
     Mark.verbatim "key"
         (\_ key ->
             Document.KeysInline key
+                |> mapping
         )
         |> Mark.field "c" keyMark
 
@@ -221,3 +269,27 @@ imagePathMark =
                         , message = [ "This path does not refer to an image." ]
                         }
             )
+
+
+noteInline : Mark.Record (Result (List Mark.Error.Error) Document.Inline)
+noteInline =
+    Mark.verbatim "note"
+        (\raw slug ->
+            case Mark.compile flatInlineDocument raw of
+                Mark.Success inlines ->
+                    Ok (Document.Note inlines slug)
+
+                Mark.Almost partial ->
+                    Err partial.errors
+
+                Mark.Failure errors ->
+                    Err errors
+        )
+        |> Mark.field "slug" Mark.string
+
+
+flatInlineDocument : Mark.Document (List Document.FlatInline)
+flatInlineDocument =
+    Mark.document
+        (\blocks -> blocks)
+        flatTextMark

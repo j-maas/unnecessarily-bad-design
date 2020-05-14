@@ -1,4 +1,4 @@
-module Document exposing (Block(..), Code, CodeLanguage(..), Document, Image, ImagePath, Inline(..), Key(..), Keys, Link, Path, Reference, Text, TextStyle, codeLanguageFromString, imagePathFromString, keyFromString, keysFromString, pathFromString)
+module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, ImagePath, Inline(..), Key(..), Keys, Link, Path, Reference, Text, TextStyle, codeLanguageFromString, imagePathFromString, keyFromString, keysFromString, pathFromString)
 
 import List.Extra as List
 import Pages exposing (PathKey)
@@ -20,7 +20,14 @@ type Block
     | ImageBlock Image
 
 
+{-| Since `Note`s should not contain other `Note`s, we differentiate between flat and other inlines.
+-}
 type Inline
+    = FlatInline FlatInline
+    | Note (List FlatInline) String
+
+
+type FlatInline
     = TextInline Text
     | LinkInline Link
     | ReferenceInline Reference
