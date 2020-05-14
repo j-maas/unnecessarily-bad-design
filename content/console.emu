@@ -8,6 +8,8 @@ What's the simplest way to interact with a computer? No, not moving the mouse an
 |> Image
     src=images/console/teleprinter.jpg
     alt=A man sitting in front of what looks like typewriter out the top of which a sheet of paper emerges. Behind him is a big cupboard-like machine.
+    width=490
+    height=500
     credit=[from Flickr]{link| url=https://www.flickr.com/photos/39821974@N06/4081725004/} by [Newcastle Libraries]{link| url=https://www.flickr.com/photos/39821974@N06/} under [public domain]{link| url=https://creativecommons.org/publicdomain/mark/1.0/} 
     caption=In 1975, you could use this typewriter-like machine to use a computer. It would react by printing out the response on the piece of paper sticking out from the top. The actual computer is visible in the background.
 

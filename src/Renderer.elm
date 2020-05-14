@@ -430,9 +430,12 @@ imageBlock image =
         [ Html.img
             [ Attributes.src (ImagePath.toString image.src)
             , Attributes.alt image.alt
+            , Attributes.width image.width
+            , Attributes.height image.height
             , css
                 [ Css.maxWidth (pct 100)
                 , Css.maxHeight (vh 50)
+                , Css.height Css.auto
                 , Css.boxShadow4 zero (em 0.1) (em 0.2) (Css.hsla 0 0 0 0.25)
                 ]
             ]
