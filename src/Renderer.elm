@@ -467,5 +467,5 @@ hover : List Css.Style -> Css.Style
 hover styles =
     Css.batch
         [ Css.hover styles
-        , Css.focus styles
+        , Css.pseudoClass "focus-within" styles
         ]
