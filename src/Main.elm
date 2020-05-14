@@ -27,7 +27,7 @@ manifest =
     , themeColor = Nothing
     , startUrl = pages.index
     , shortName = Nothing
-    , sourceIcon = images.iconPng
+    , sourceIcon = images.favicon
     }
 
 
@@ -149,8 +149,8 @@ head metadata =
                         { canonicalUrlOverride = Nothing
                         , siteName = siteName
                         , image =
-                            { url = images.iconPng
-                            , alt = "elm-pages logo"
+                            { url = images.favicon
+                            , alt = "A keycap with the label “?”"
                             , dimensions = Nothing
                             , mimeType = Nothing
                             }
