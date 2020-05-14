@@ -440,6 +440,7 @@ imageBlock image =
                 [ Css.maxWidth (pct 100)
                 , Css.maxHeight (vh 50)
                 , Css.height Css.auto
+                , Css.width Css.auto
                 , Css.boxShadow4 zero (em 0.1) (em 0.2) (Css.hsla 0 0 0 0.25)
                 ]
             ]
