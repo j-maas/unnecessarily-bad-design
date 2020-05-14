@@ -7,13 +7,13 @@ What's the simplest way to interact with a computer? No, not moving the mouse an
 
 |> Image
     src=images/console/teleprinter.jpg
-    alt=A man sitting in front of what looks like typewriter on the top of which a sheet of paper emerges. In the background there is a big cupboard-like machine.
-    credit=from [Flickr]{link| url=https://www.flickr.com/photos/39821974@N06/4081725004/} by [Newcastle Libraries]{link| url=https://www.flickr.com/photos/39821974@N06/} under [public domain]{link| url=https://creativecommons.org/publicdomain/mark/1.0/} 
-    caption=In 1975, you could use this typewriter-like machine to program a computer. It would react by printing out the response on the piece of paper sticking out from the top. The actual computer is visible in the background.
+    alt=A man sitting in front of what looks like typewriter out the top of which a sheet of paper emerges. Behind him is a big cupboard-like machine.
+    credit=[from Flickr]{link| url=https://www.flickr.com/photos/39821974@N06/4081725004/} by [Newcastle Libraries]{link| url=https://www.flickr.com/photos/39821974@N06/} under [public domain]{link| url=https://creativecommons.org/publicdomain/mark/1.0/} 
+    caption=In 1975, you could use this typewriter-like machine to use a computer. It would react by printing out the response on the piece of paper sticking out from the top. The actual computer is visible in the background.
 
 The simplest method is text. Write what you want.
 
-That's exactly what the console does. You write what you want and the computer writes back.
+That's exactly what the console does. You write what you want and the computer writes back. Even though this idea is really simple, it works so well that it is still being used today!
 
 |> Heading
     Programs: What can I ask for?
@@ -50,9 +50,9 @@ Now it gets interesting because we change the working directory. The program tha
 |> Heading
     Help: `man`{bash}, what can I do?
 
-Since people are lazy, they try to keep everything short. "Copy" becomes `cp`{bash}, "list" becomes `ls`{bash}, "all files (including hidden ones)" becomes `-a`{bash}. So it might be a bit difficult to guess or even remember how everything was called, exactly.
+Since people are lazy, they try to keep everything short. "Copy" becomes `cp`{bash}, "list" becomes `ls`{bash}, "show all files, including hidden ones" becomes `-a`{bash}. So it might be a bit difficult to guess or even remember how everything was called exactly.
 
-But luckily, the programmers have included a "manual" on how to use their programs. And it's available as a console program, `man`{bash}! If you forget how to use `cp`{bash}, `man cp`{bash} will list you all options that are available. Many programs also offer a flag that displays some helpful information, typically called `--help`{bash}. So `cp --help`{bash} will show you what flags and options are available and how it's used. There is no better one, those are just two different ways that programs might give you help.
+But luckily, most programs have a "manual" on how to use their programs. And it's available as a console program, `man`{bash}! If you forget how to use `cp`{bash}, `man cp`{bash} will list you all options that are available. Many programs also offer a flag that displays some helpful information, typically called `--help`{bash}. So `cp --help`{bash} will show you what flags and options are available and how it's used. There is no better one, those are just two different ways that programs might give you help.
 
 You also need to know how to read certain aspects of the help text. As an example, here is a snippet of what `ls --help`{bash} returns:
 
@@ -131,7 +131,7 @@ But it's not too bad. All consoles still provide you programs that you can call 
 |> Heading
     Tricks: Complete historic kill
 
-When you have to work with the console more often, you might benefit from completion and from the history.
+When you have to work with the console more often, you might benefit from some tricks that many consoles offer. Try them out to see whether they are supported in the console you use.
 
 Most consoles will allow you to enter part of a file name and hit ``{key| c=TAB} which triggers them to fill out the rest of the file name for you. If there are multiple options that start with what you have typed so far, it won't pick one at random. Hit ``{key| c=TAB} twice to show a list of available files. Continue to type out the file name you want until you can ``{key| c=TAB} it to completion. Completion usually also works for programs and arguments.
 
