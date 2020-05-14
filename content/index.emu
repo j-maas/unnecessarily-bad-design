@@ -3,39 +3,21 @@ type: page
 title: How to program
 ---
 
-Programming can be fun. It can be nice and beautiful.
+To many, programming is a tedious chore where you're fighting with hard-to-understand error messages and smash your keyboard in frustration.
 
-You don't think so? Does programming feel tedious with lots of frustrating bugs, unhelpful error messages and only occasional success?
+What, if it didn't need to be that way? What if programming could actually be nice, most of the time.
 
-Well, you've finally come to the right place. Here, you can learn how to do things the nice way. Most importantly, I'll show you good ways of thinking about software. Once you've understood those concepts, you can apply them to any software project you work on, regardless of the technology you use.
-
-|> Heading
-    What we'll do
-
-We will build a simple web app. Something to which you can add your own, personal twist. Something that you can show your friends and have fun with. And something that will show you the minimum of what's needed to build software.
-
-But this is only to get you started. You could learn that from elsewhere, too. But here, you can go further.
-
-Once you've built your app, you can look at the nice stuff. These are the things every programmer should know about, but for some reason are rarely taught. For each thing, I will prove why it is nice. And then I'll show you how you can incorporate it into your workflow.
-
-Once you've worked through all of this, you can experiment and gain experience. And whenever you learn something new and interesting that you want to share with the world, you can! Because you'll be able to contribute to this site.
-
-|> Heading
-    The Getting Started project
-
-If you've never programmed before or if you are not familiar with functional programming (or simply interested in [Elm]{link|url=https://elm-lang.org}), then the project will get you up to speed. After finishing it, you will have both built something that you can be excited about and brag to your friends about, and have your foot in the door to the world of programming.
-
-If you already have some experience programming, feel free to skip this. Go read about the nice stuff that you do not yet know about. Some of it will build on top the project, but you can also apply it to any project of yours; the project will serve as an example.
+If you have to program, here is some Nice Stuff that for some reason is not commonly taught. If it is taught, you often just superficially learn how to use it. But it is not hard to understand! There are good reasons for many things being how they are and knowing why something works that way will help you remember how to use it.
 
 |> Heading
     The Nice Stuff
 
-There are a lot of things that make programming easy. Not all of it is about coding! A lot of tools outside of the text editor make programming easier.
+Not all of programming is about coding! A lot of tools outside of the text editor make programming easier.
 
-Many of them are console tools. So you'll learn [how to use the console]{ref|path=console}. You'll look like a hacker from a movie! (But be warned: It's actually quite boring and simple.) You also need to know about [Git]{link|url=https://git-scm.com/} and [GitHub]{link|url=https://github.com/} which will help you not lose code, share it and collaborate with other people. And speaking of collaboration, when you get stuck and need help, you should know a thing or two about how to ask a good question. Yes, really. And I'll also show you where to ask it.
+Many of them are console tools. So you'll learn [how to use the console]{ref|path=console}. You'll look like a hacker from a movie! But be warned: It's actually quite boring and simple. One of those tools is [Git]{link|url=https://git-scm.com/} which will help you not worry about losing code ever again, and even work together with other people on the same program. And speaking of collaboration, when you get stuck and need help, you should know a thing or two about how to ask a good question. Yes, really. And I'll also show you where to ask it.
 
-But there are things to know about coding as well. Instead of chasing bugs when they've gotten deep inside your system, why not write automated tests that check very quickly whether your code works as you expect? And you'll also learn how to organize the solutions you have in your head into nice, reusable modules and abstractions. Sounds scary? It's not complicated! You just need to know what to look out for and train your nose to spot smells.
+But there are things to know about coding as well. Instead of chasing bugs when they've infected the guts of your program, why not have the computer test whether your code does what you expect? It can test very quickly and every time you save your file. And you'll also learn how to organize the solutions you have in your head into nice, reusable abstractions. Sounds scary? It's not complicated! You just need to know what to look out for and train your nose to spot smells.
 
-And if you spend a lot of time writing code, you should also learn how to touch type. But you probably have guessed that already. But do you know about Vim's keyboard shortcuts that make moving lines of code around and replacing function parameters really quick and easy? (I'll even show you how to exit Vim. You'll get it.)
+And if you spend a lot of time writing code, you should also learn how to touch type. You probably have guessed that already. But do you know about Vim's keyboard shortcuts that make moving lines of code around and replacing function parameters really quick and easy? I'll even show you how to exit Vim. You'll get that joke.
 
-There is also some [required reading]{ref|path=required-reading} that is absolutely essential to every programmer. No debates, put your time in and read it all.
+There is also some [required reading]{ref|path=required-reading} that is absolutely essential for every programmer to know. No debates, put your time in and read it all.
