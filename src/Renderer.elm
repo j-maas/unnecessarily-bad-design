@@ -307,6 +307,7 @@ renderReference reference =
                 (renderText
                     [ Css.fontFamilies [ "Bitter", "serif" ]
                     , Css.textTransform Css.uppercase
+                    , Css.fontWeight Css.bold
                     , Css.fontSize (em 0.8)
                     ]
                 )
