@@ -440,7 +440,7 @@ imageBlock image =
         , Html.figcaption
             [ css
                 [ Css.marginTop (rem 0.5)
-                , Css.alignSelf Css.start
+                , Css.alignSelf Css.flexStart
                 ]
             ]
             (List.map renderInline image.caption)
@@ -452,8 +452,8 @@ imageBlock image =
                 , Css.opacity (num 0.5)
                 , Css.display Css.inlineBlock
                 , Css.maxWidth (pct 90)
-                , Css.alignSelf Css.end
-                , Css.textAlign Css.end
+                , Css.alignSelf Css.flexEnd
+                , Css.textAlign Css.flexEnd
                 , hover
                     [ Css.opacity (num 1)
                     ]
