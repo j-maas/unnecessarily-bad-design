@@ -493,18 +493,19 @@ framedStyle =
 -}
 renderNote : List FlatInline -> Rendered msg
 renderNote content =
-    Html.span
+    Html.aside
         [ css
             [ Css.Global.children
                 [ Css.Global.typeSelector "input"
                     [ Css.pseudoClass "checked"
                         [ Css.Global.adjacentSiblings
-                            [ Css.Global.typeSelector "span"
+                            [ Css.Global.typeSelector "small"
                                 [ Css.display Css.block ]
                             ]
                         ]
                     ]
                 ]
+            , Css.display Css.inline
             ]
         ]
         [ Html.input
@@ -513,12 +514,13 @@ renderNote content =
             , css [ Css.verticalAlign Css.middle ]
             ]
             []
-        , Html.span
+        , Html.small
             [ css
                 [ Css.display Css.none
                 , Css.padding2 (em 0.25) zero
                 , framedStyle
                 , Css.margin2 (rem 0.5) (rem 1)
+                , Css.fontSize (em 1)
                 ]
             ]
             (List.map renderFlatInline content)
