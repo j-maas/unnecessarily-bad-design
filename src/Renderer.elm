@@ -353,7 +353,7 @@ codeBackgroundStyle : Css.Style
 codeBackgroundStyle =
     Css.batch
         [ Css.borderRadius (em 0.2)
-        , Css.backgroundColor (Css.hsl 0 0 0.9)
+        , Css.backgroundColor (Css.hsla 0 0 0.5 0.15)
         , Css.padding2 (em 0.05) (em 0.2)
         , Css.fontSize (em 0.95)
         ]
