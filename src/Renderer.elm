@@ -452,7 +452,7 @@ imageBlock image =
                 ]
             ]
             [ paragraph image.caption
-            , Html.cite
+            , Html.i
                 [ css
                     [ Css.marginTop (rem 0.25)
                     , Css.fontStyle Css.normal
@@ -493,7 +493,7 @@ framedStyle =
 -}
 renderNote : List FlatInline -> Rendered msg
 renderNote content =
-    Html.aside
+    Html.span
         [ css
             [ Css.Global.children
                 [ Css.Global.typeSelector "input"
