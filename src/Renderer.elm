@@ -451,23 +451,24 @@ imageBlock image =
                 , Css.alignSelf Css.flexStart
                 ]
             ]
-            (List.map renderInline image.caption)
-        , Html.cite
-            [ css
-                [ Css.marginTop (rem 0.25)
-                , Css.fontStyle Css.normal
-                , Css.fontSize (em 0.9)
-                , Css.opacity (num 0.5)
-                , Css.display Css.inlineBlock
-                , Css.maxWidth (pct 90)
-                , Css.alignSelf Css.flexEnd
-                , Css.textAlign Css.end
-                , hover
-                    [ Css.opacity (num 1)
+            [ paragraph image.caption
+            , Html.cite
+                [ css
+                    [ Css.marginTop (rem 0.25)
+                    , Css.fontStyle Css.normal
+                    , Css.fontSize (em 0.9)
+                    , Css.opacity (num 0.5)
+                    , Css.display Css.inlineBlock
+                    , Css.maxWidth (pct 90)
+                    , Css.textAlign Css.end
+                    , Css.float Css.right
+                    , hover
+                        [ Css.opacity (num 1)
+                        ]
                     ]
                 ]
+                (List.map renderInline image.credit)
             ]
-            (List.map renderInline image.credit)
         ]
 
 
