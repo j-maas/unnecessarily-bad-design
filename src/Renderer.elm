@@ -217,7 +217,7 @@ bodyFontFamily =
 
 headingFontFamily : Css.Style
 headingFontFamily =
-    Css.fontFamilies [ "Libre Baskerville", "serif" ]
+    Css.fontFamilies [ "Merriweather", "serif" ]
 
 
 paragraphFontStyle : Css.Style
