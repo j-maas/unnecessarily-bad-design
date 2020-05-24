@@ -1,0 +1,24 @@
+---
+type: article
+title: Radiator valves
+question: Do you turn your radiator to its maximum setting to heat the room faster?
+---
+
+|> Image
+    src=images/radiator-valves/radiator-valve.jpg
+    alt=A radiator valve set to 3. The scale increases up to 5.
+    width=5184
+    height=3456
+    credit=
+    caption=The numbers seem to represent the power with which to heat. In reality, they represent a rough temperature range.
+
+It is natural to assume that the numbers represent the strength of the heating. Setting it to 5, with this understanding, will heat the room quicker, because more hot water is assumed to be pumped through.
+
+In reality, the valve sets a [target temperature]{link|url=https://en.wikipedia.org/wiki/Thermostatic_radiator_valve#Temperatures}. The 3 is around 19 °C and the 4 around 22 °C.
+
+If the current temperature is below the target temperature, the radiator always heats as much as it can, until the temperature reaches its desired level. Setting a higher number will therefore not heat up the room quicker, it will only heat it up to a higher temperature.
+
+|> Heading
+    How to fix it
+
+Label the valve with the approximate temperature. Not only does it mitigate the misunderstanding of its function, it also helps choose the appropriate setting.

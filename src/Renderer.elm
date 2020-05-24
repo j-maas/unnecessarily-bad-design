@@ -1,4 +1,4 @@
-module Renderer exposing (Rendered, body, heading, mainContent, navigation, paragraph, render, renderDocument, subheading, title)
+module Renderer exposing (Rendered, body, heading, mainContent, navigation, paragraph, render, renderDocument, renderReference, subheading, title)
 
 import Css exposing (em, num, pct, px, rem, vh, zero)
 import Css.Global
@@ -27,7 +27,7 @@ body content =
             [ Css.padding (rem 1)
             , Css.maxWidth (rem 48)
             , Css.margin Css.auto
-            , bodyFontStyle
+            , bodyFontFamily
             ]
         ]
         content
@@ -187,7 +187,7 @@ subheading contents =
 headingStyle : Css.Style
 headingStyle =
     Css.batch
-        [ Css.fontFamilies [ "Bitter", "serif" ]
+        [ headingFontFamily
         , Css.fontWeight Css.bold
         , Css.margin zero
         , Css.lineHeight (num 1.2)
@@ -210,9 +210,14 @@ paragraphStyle =
         ]
 
 
-bodyFontStyle : Css.Style
-bodyFontStyle =
-    Css.fontFamilies [ "Asap", "sans-serif" ]
+bodyFontFamily : Css.Style
+bodyFontFamily =
+    Css.fontFamilies [ "Rubik", "sans-serif" ]
+
+
+headingFontFamily : Css.Style
+headingFontFamily =
+    Css.fontFamilies [ "Libre Baskerville", "serif" ]
 
 
 paragraphFontStyle : Css.Style
@@ -315,9 +320,7 @@ renderReference reference =
         { text =
             List.map
                 (renderText
-                    [ Css.fontFamilies [ "Bitter", "serif" ]
-                    , Css.textTransform Css.uppercase
-                    , Css.fontWeight Css.bold
+                    [ Css.fontWeight Css.bold
                     , Css.fontSize (em 0.8)
                     ]
                 )
@@ -420,11 +423,36 @@ renderKey key =
 
 imageBlock : Document.Image -> Rendered msg
 imageBlock image =
+    let
+        credits =
+            case image.credit of
+                Just credits_ ->
+                    [ Html.i
+                        [ css
+                            [ Css.marginTop (rem 0.25)
+                            , Css.fontStyle Css.normal
+                            , Css.fontSize (em 0.9)
+                            , Css.opacity (num 0.5)
+                            , Css.display Css.inlineBlock
+                            , Css.maxWidth (pct 90)
+                            , Css.textAlign Css.end
+                            , Css.float Css.right
+                            , hover
+                                [ Css.opacity (num 1)
+                                ]
+                            ]
+                        ]
+                        (List.map renderInline credits_)
+                    ]
+
+                Nothing ->
+                    []
+    in
     Html.figure
         [ css
             [ Css.margin2 paragraphSpacing zero
-            , Css.padding2 (rem 0.5) zero
             , framedStyle
+            , Css.overflow Css.hidden
             , paragraphFontStyle
             , Css.displayFlex
             , Css.flexDirection Css.column
@@ -438,37 +466,22 @@ imageBlock image =
             , Attributes.height image.height
             , css
                 [ Css.maxWidth (pct 100)
-                , Css.maxHeight (vh 50)
                 , Css.height Css.auto
                 , Css.width Css.auto
-                , Css.boxShadow4 zero (em 0.1) (em 0.2) (Css.hsla 0 0 0 0.25)
                 ]
             ]
             []
         , Html.figcaption
             [ css
-                [ Css.marginTop (rem 0.5)
+                [ Css.boxSizing Css.borderBox
+                , Css.width (pct 100)
+                , Css.padding (rem 0.5)
                 , Css.alignSelf Css.flexStart
                 ]
             ]
-            [ paragraph image.caption
-            , Html.i
-                [ css
-                    [ Css.marginTop (rem 0.25)
-                    , Css.fontStyle Css.normal
-                    , Css.fontSize (em 0.9)
-                    , Css.opacity (num 0.5)
-                    , Css.display Css.inlineBlock
-                    , Css.maxWidth (pct 90)
-                    , Css.textAlign Css.end
-                    , Css.float Css.right
-                    , hover
-                        [ Css.opacity (num 1)
-                        ]
-                    ]
-                ]
-                (List.map renderInline image.credit)
-            ]
+            (paragraph image.caption
+                :: credits
+            )
         ]
 
 
@@ -479,13 +492,8 @@ framedStyle =
             0.5
     in
     Css.batch
-        [ Css.borderTop3 (px 1) Css.solid (Css.hsla 0 0 0 0.25)
-        , Css.borderBottom3 (px 1) Css.solid (Css.hsla 0 0 0 0.25)
+        [ Css.border3 (px 1) Css.solid (Css.hsla 0 0 0 0.25)
         , Css.borderRadius (rem spacing)
-        , Css.marginLeft (rem -spacing)
-        , Css.marginRight (rem -spacing)
-        , Css.paddingLeft (rem spacing)
-        , Css.paddingRight (rem spacing)
         ]
 
 

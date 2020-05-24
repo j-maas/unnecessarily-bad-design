@@ -1,14 +1,17 @@
-module Metadata exposing (Metadata(..), PageMetadata, decoder)
+module Metadata exposing (ArticleMetadata, Metadata(..), decoder)
 
 import Json.Decode as Decode
 
 
 type Metadata
-    = Page PageMetadata
+    = Index
+    | Article ArticleMetadata
 
 
-type alias PageMetadata =
-    { title : String }
+type alias ArticleMetadata =
+    { title : String
+    , question : String
+    }
 
 
 decoder =
@@ -16,9 +19,19 @@ decoder =
         |> Decode.andThen
             (\pageType ->
                 case pageType of
-                    "page" ->
-                        Decode.field "title" Decode.string
-                            |> Decode.map (\title -> Page { title = title })
+                    "article" ->
+                        Decode.map2
+                            (\title question ->
+                                Article
+                                    { title = title
+                                    , question = question
+                                    }
+                            )
+                            (Decode.field "title" Decode.string)
+                            (Decode.field "question" Decode.string)
+
+                    "index" ->
+                        Decode.succeed Index
 
                     _ ->
                         Decode.fail <| "Unexpected page type " ++ pageType

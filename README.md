@@ -1,4 +1,4 @@
-# How to program
+# Unnecessarily bad design
 
 ```bash
 npm install

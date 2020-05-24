@@ -1,12 +1,13 @@
 module Main exposing (main)
 
 import Document exposing (Document)
-import Documents.Markup
 import Head
 import Head.Seo as Seo
-import Html exposing (Html)
+import Html as PlainHtml
+import Html.Styled as Html exposing (Html)
+import Markup
 import Metadata exposing (Metadata)
-import Pages exposing (images, pages)
+import Pages exposing (PathKey, images, pages)
 import Pages.Manifest as Manifest
 import Pages.Manifest.Category
 import Pages.PagePath exposing (PagePath)
@@ -38,7 +39,7 @@ main =
         , view = view
         , update = update
         , subscriptions = subscriptions
-        , documents = [ Documents.Markup.document ]
+        , documents = [ Markup.document ]
         , manifest = manifest
         , canonicalSiteUrl = canonicalSiteUrl
         , onPageChange = Nothing
@@ -80,16 +81,16 @@ view :
         }
     ->
         StaticHttp.Request
-            { view : Model -> Document -> { title : String, body : Html Msg }
+            { view : Model -> Document -> { title : String, body : PlainHtml.Html Msg }
             , head : List (Head.Tag Pages.PathKey)
             }
-view _ meta =
+view allPages meta =
     StaticHttp.succeed
         { view =
             \_ document ->
                 let
                     { title, body } =
-                        viewPage meta document
+                        viewPage allPages meta document
                 in
                 { title = title
                 , body =
@@ -101,12 +102,18 @@ view _ meta =
 
 
 viewPage :
-    { path : PagePath Pages.PathKey, frontmatter : Metadata }
+    List ( PagePath Pages.PathKey, Metadata )
+    -> { path : PagePath Pages.PathKey, frontmatter : Metadata }
     -> Document
     -> { title : String, body : Renderer.Rendered Msg }
-viewPage page document =
+viewPage allPages page document =
     case page.frontmatter of
-        Metadata.Page metadata ->
+        Metadata.Index ->
+            { title = siteName
+            , body = viewIndex allPages
+            }
+
+        Metadata.Article metadata ->
             { title = metadata.title
             , body =
                 let
@@ -118,8 +125,18 @@ viewPage page document =
                         else
                             [ Renderer.navigation pages.index ]
 
+                    questionInline =
+                        Document.plainText metadata.question
+                            |> Document.TextInline
+                            |> Document.FlatInline
+                            |> List.singleton
+                            |> Document.Paragraph
+
+                    fullDocument =
+                        Document.Title metadata.title :: questionInline :: document
+
                     rendered =
-                        Renderer.renderDocument (Document.Title metadata.title :: document)
+                        Renderer.renderDocument fullDocument
                 in
                 Renderer.body
                     (navigation
@@ -128,6 +145,46 @@ viewPage page document =
                            ]
                     )
             }
+
+
+viewIndex : List ( PagePath Pages.PathKey, Metadata ) -> Html Msg
+viewIndex allPages =
+    let
+        things =
+            List.filterMap
+                (\( path, meta ) ->
+                    case meta of
+                        Metadata.Article articleMeta ->
+                            Just ( path, articleMeta )
+
+                        _ ->
+                            Nothing
+                )
+                allPages
+    in
+    Renderer.body
+        [ Renderer.title siteName
+        , Html.ol []
+            (List.map
+                (\( path, meta ) ->
+                    let
+                        title =
+                            [ Document.ReferenceInline { text = [ Document.plainText meta.title ], path = path } ]
+                                |> List.map Document.FlatInline
+
+                        question =
+                            [ Document.plainText meta.question ]
+                                |> List.map Document.TextInline
+                                |> List.map Document.FlatInline
+                    in
+                    Html.li []
+                        [ Renderer.heading title
+                        , Renderer.paragraph question
+                        ]
+                )
+                things
+            )
+        ]
 
 
 commonHeadTags : List (Head.Tag Pages.PathKey)
@@ -144,16 +201,22 @@ head : Metadata -> List (Head.Tag Pages.PathKey)
 head metadata =
     commonHeadTags
         ++ (case metadata of
-                Metadata.Page meta ->
+                Metadata.Index ->
+                    Seo.summary
+                        { canonicalUrlOverride = Nothing
+                        , siteName = siteName
+                        , image = favicon
+                        , description = siteTagline
+                        , title = siteName
+                        , locale = Just "en"
+                        }
+                        |> Seo.website
+
+                Metadata.Article meta ->
                     Seo.summaryLarge
                         { canonicalUrlOverride = Nothing
                         , siteName = siteName
-                        , image =
-                            { url = images.favicon
-                            , alt = "A keycap with the label “?”"
-                            , dimensions = Nothing
-                            , mimeType = Nothing
-                            }
+                        , image = favicon
                         , description = siteTagline
                         , locale = Just "en"
                         , title = meta.title
@@ -164,14 +227,23 @@ head metadata =
 
 canonicalSiteUrl : String
 canonicalSiteUrl =
-    "https://y0hy0h.github.io/how-to-program/"
+    "https://y0hy0h.github.io/unnecessarily-bad-design/"
 
 
 siteName : String
 siteName =
-    "How to program"
+    "Unnecessarily bad design"
 
 
 siteTagline : String
 siteTagline =
-    "Everything you didn't know you needed to know about programming."
+    "Things that hard to use for no damn reason."
+
+
+favicon : Seo.Image PathKey
+favicon =
+    { url = images.favicon
+    , alt = "A red pedestrian traffic light"
+    , dimensions = Nothing
+    , mimeType = Nothing
+    }

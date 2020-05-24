@@ -1,4 +1,4 @@
-module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, ImagePath, Inline(..), Key(..), Keys, Link, Path, Reference, Text, TextStyle, codeLanguageFromString, imagePathFromString, keyFromString, keysFromString, pathFromString)
+module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, ImagePath, Inline(..), Key(..), Keys, Link, Path, Reference, Text, TextStyle, plainText, codeLanguageFromString, imagePathFromString, keyFromString, keysFromString, pathFromString)
 
 import List.Extra as List
 import Pages exposing (PathKey)
@@ -43,6 +43,13 @@ type alias Text =
 
 type alias TextStyle =
     { emphasized : Bool
+    }
+
+
+plainText : String -> Text
+plainText text =
+    { style = { emphasized = False }
+    , content = text
     }
 
 
@@ -159,7 +166,7 @@ type alias Image =
     , width : Int
     , height : Int
     , caption : List Inline
-    , credit : List Inline
+    , credit : Maybe (List Inline)
     }
 
 

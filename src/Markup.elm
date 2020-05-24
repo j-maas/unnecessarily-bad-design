@@ -1,4 +1,4 @@
-module Documents.Markup exposing (document)
+module Markup exposing (document)
 
 import Document exposing (Block(..), Document, Text)
 import Json.Decode exposing (Decoder)
@@ -254,7 +254,7 @@ imageMark =
         |> Mark.field "width" Mark.int
         |> Mark.field "height" Mark.int
         |> Mark.field "caption" richTextMark
-        |> Mark.field "credit" richTextMark
+        |> Mark.field "credit" optionalRichtTextMark
         |> Mark.toBlock
 
 
@@ -268,6 +268,19 @@ imagePathMark =
                         { title = "Invalid image path"
                         , message = [ "This path does not refer to an image." ]
                         }
+            )
+
+
+optionalRichtTextMark : Mark.Block (Maybe (List Document.Inline))
+optionalRichtTextMark =
+    richTextMark
+        |> Mark.map
+            (\inlines ->
+                if List.isEmpty inlines then
+                    Nothing
+
+                else
+                    Just inlines
             )
 
 
