@@ -17,6 +17,7 @@ import Pages.PagePath exposing (PagePath)
 import Pages.Platform
 import Pages.StaticHttp as StaticHttp
 import Renderer
+import Url
 
 
 manifest : Manifest.Config Pages.PathKey
@@ -175,6 +176,7 @@ viewIndex allPages =
             [ css
                 [ Css.margin zero
                 , Css.marginTop (rem 1)
+                , Css.marginBottom (rem 3)
                 , Css.padding zero
                 , Css.listStyleType Css.none
                 , Css.Global.children
@@ -207,6 +209,24 @@ viewIndex allPages =
                 )
                 things
             )
+        , let
+            repoUrl =
+                { protocol = Url.Https
+                , host = "github.com"
+                , port_ = Nothing
+                , path = "/y0hy0h/unnecessarily-bad-design"
+                , query = Nothing
+                , fragment = Nothing
+                }
+
+            contribute =
+                [ Document.TextInline (Document.plainText "If you know more examples of unnecessarily bad design, contribute to the ")
+                , Document.LinkInline { text = [ Document.plainText "GitHub repository" ], url = repoUrl }
+                , Document.TextInline (Document.plainText ".")
+                ]
+                    |> List.map Document.FlatInline
+          in
+          Renderer.paragraph contribute
         ]
 
 
