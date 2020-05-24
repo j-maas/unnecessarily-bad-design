@@ -3,3 +3,14 @@ type: article
 title: Deletion confirmation dialogs
 question: Have you regretted answering “Really delete this?” with yes?
 ---
+
+"Are you sure you want to delete this?" Yes, of course. I rarely click the delete button by accident. So now I'm used to just always clicking yes.
+
+But sometimes I then notice that I deleted the wrong thing. Great. Because I always click yes, I do it without thinking much. And so the dialog does not prevent me from deleting the wrong thing.
+
+|> Heading
+    How to fix it
+
+Do not ask for confirmation. Offer undo.
+
+Some services, like [Google Keep]{link|url=https://keep.google.com}, already do this. Deleting is quick and easy, and if I delete something by accident, no worries, I restore it immediately.
