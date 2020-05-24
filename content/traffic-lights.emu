@@ -3,3 +3,14 @@ type: article
 title: Traffic lights
 question: Are you anxious driving towards a green light that it might turn red soon?
 ---
+
+When you are approaching a traffic light that is currently green, I have no indication of when it will turn red. I feel nervous because if it turns red, I need to quickly judge whether I can make it across in time. And the switch is sudden, with only a short, yellow grace period.
+
+Similarly, when sitting---or standing---at a red light I get impatient because I need to keep watching the light but nothing happens for quite a while.
+
+|> Heading
+    How to fix it
+
+Indicate the remaining time for the current phase. Either use a seconds countdown next to the light, or some other more approximate indicator like a circle that drains similar to a clock's handles.
+
+Not only can driver's easily judge whether they can make it across a green light, pedestrians know they can answer this text while waiting for a green light.
