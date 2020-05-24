@@ -1,10 +1,13 @@
 module Main exposing (main)
 
+import Css exposing (rem, zero)
+import Css.Global
 import Document exposing (Document)
 import Head
 import Head.Seo as Seo
 import Html as PlainHtml
 import Html.Styled as Html exposing (Html)
+import Html.Styled.Attributes exposing (css)
 import Markup
 import Metadata exposing (Metadata)
 import Pages exposing (PathKey, images, pages)
@@ -168,7 +171,23 @@ viewIndex allPages =
     in
     Renderer.body
         [ Renderer.title siteName
-        , Html.ol []
+        , Html.ul
+            [ css
+                [ Css.margin zero
+                , Css.marginTop (rem 1)
+                , Css.padding zero
+                , Css.listStyleType Css.none
+                , Css.Global.children
+                    [ Css.Global.typeSelector "li"
+                        [ Css.Global.adjacentSiblings
+                            [ Css.Global.typeSelector "li"
+                                [ Css.marginTop (rem 0.5)
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
             (List.map
                 (\( path, meta ) ->
                     let
