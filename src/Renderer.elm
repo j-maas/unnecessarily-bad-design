@@ -466,8 +466,8 @@ imageBlock image =
             , Attributes.height image.height
             , css
                 [ Css.maxWidth (pct 100)
+                , Css.width (pct 100)
                 , Css.height Css.auto
-                , Css.width Css.auto
                 ]
             ]
             []

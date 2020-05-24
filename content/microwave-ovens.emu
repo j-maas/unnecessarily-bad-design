@@ -3,3 +3,29 @@ type: article
 title: Microwave ovens
 question: Does it take more time to set up the machine than to warm your food?
 ---
+|> Image
+    src=images/microwave-ovens/microwave-oven.jpg
+    alt=A microwave with 18 buttons labeled in Japanese.
+    width=3072
+    height=2304
+    credit=[from Flickr]{link|url=https://flic.kr/p/5LQHa9} by [Jeremy Hall]{link|url=https://www.flickr.com/photos/wallslide/} under [CC BY 2.0]{link|url=https://creativecommons.org/licenses/by/2.0/}, cropped
+    caption=Even if the controls are labeled in a foreign language, I should be able to cook my food.
+
+The only thing that I need to set is the time that my food should cook. I do not need more controls.
+
+Any extra button will make it harder to figure out, which controls to use to set the time. Maybe I can get used to and remember the right buttons, but why not make it stupidly simple?
+
+|> Heading
+    How to fix it
+
+Have a turning knob like a cooking timer.
+
+Maybe add a second turning knob for setting the power, but it should by styled in a way that the timer knob is the only important control.
+
+|> Image
+    src=images/microwave-ovens/good.png
+    alt=A microwave with two turning knobs. One sets the wattage, the other sets the time.
+    width=671
+    height=403
+    credit=[from Flickr]{link|url=https://flic.kr/p/28bMaYN} by [1Day Review]{link|url=https://www.flickr.com/photos/159770474@N08/} under [CC BY 2.0]{link|url=https://creativecommons.org/licenses/by/2.0/}, cropped
+    caption=Almost perfect. Improve it by making the watt control less prominent.
