@@ -114,7 +114,11 @@ viewPage allPages page document =
             }
 
         Metadata.Article metadata ->
-            { title = metadata.title
+            let
+                title =
+                    metadata.title ++ ", an unnecessarily bad design"
+            in
+            { title = title
             , body =
                 let
                     navigation =
@@ -133,7 +137,7 @@ viewPage allPages page document =
                             |> Document.Paragraph
 
                     fullDocument =
-                        Document.Title metadata.title :: questionInline :: document
+                        Document.Title title :: questionInline :: document
 
                     rendered =
                         Renderer.renderDocument fullDocument
