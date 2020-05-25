@@ -4,13 +4,13 @@ title: Deletion confirmation
 question: Have you regretted answering “Really delete this?” with yes?
 ---
 
-"Are you sure you want to delete this?" Yes, of course. I rarely click the delete button by accident. So now I'm used to just always clicking yes.
+"Are you sure?" Yes, of course. I rarely click the delete button by accident. Instead, I'm now used to just always clicking yes as a part of all my deletions.
 
-But sometimes I then notice that I deleted the wrong thing. Great. Because I always click yes, I do it without thinking much. And so the dialog does not prevent me from deleting the wrong thing.
+But sometimes I then notice that I deleted the wrong thing. Great. So now the confirmation makes deleting take longer, but still does not prevent me from accidental deletion.
 
 |> Heading
     How to fix it
 
 Do not ask for confirmation. Offer undo.
 
-Some services, like [Google Keep]{link|url=https://keep.google.com}, already do this. Deleting is quick and easy, and if I delete something by accident, no worries, I restore it immediately.
+Some services already do this. After deletion, they typically show a little box with an undo button for a short while. Deleting this way is quick and easy, and if I delete something by accident, no worries, I restore it immediately.
