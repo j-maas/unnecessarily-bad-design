@@ -4,23 +4,25 @@ title: Door handles
 question: Have you pushed a door that should be pulled?
 ---
 
-Some doors seem like they should be pushed, when they actually should be pulled. Some look like they should be pulled, when they should be pushed.
+I sometimes run into a door, because I try to push it, but it only can be pulled. Or the opposite.
 
-We know this. We stick labels on the doors that tell us what to do. And I /still/ get it wrong.
+They know about this problem. They stick labels on the doors that tell us what to do. And I /still/ get it wrong. So labels don't solve the problem.
 
 By the way, these doors are [called Norman doors]{link|url=https://99percentinvisible.org/article/norman-doors-dont-know-whether-push-pull-blame-design/} after [Don Norman]{link|url=https://en.wikipedia.org/wiki/Don_Norman} who discusses them in his book [The Design of Everyday Things]{link|url=https://en.wikipedia.org/wiki/The_Design_of_Everyday_Things}.
 
 |> Heading
     How to fix it
 
-Have a flat plate for pushing, and a curved handle with a flat surface on the inside for pulling.
+Don't have handles that I need to grip. Have a flat plate for pushing, and a kind of flap for pulling.
+
+If you need a lock and thus a lever handle, use other hints. For example if the door hangs visibly before the frame, I won't try pushing it.
 
 Fortunately, when lives are at stake, this is done right; emergency doors often have a horizontal bar that you push. Less stylish, but saves lives.
 
 |> Image
     src=images/door-handles/emergency-exit.jpg
-    alt=A double door with signs stating “Do not block. Fire exit.” There is a handle going across each door with a wide, pushable lever marked "Emergency exit. Push to open. Alarm will sound."
+    alt=A double door with signs stating “Do not block. Fire exit.” There is a handle going across each door with a wide, pushable lever labeled "Emergency exit. Push to open. Alarm will sound."
     width=2983
     height=2436
     credit=[from Flickr]{link|url=https://flic.kr/p/2iggPLY} by [Mike Mozart]{link|url=https://www.flickr.com/photos/jeepersmedia/} under [CC BY 2.0]{link|url=https://creativecommons.org/licenses/by/2.0/}, cropped
-    caption=I want to push this door. Those handles really don't look like they'd like to be pulled.
+    caption=I won't pull this door. And if people rush against it, it will open.
