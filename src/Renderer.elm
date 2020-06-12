@@ -518,6 +518,12 @@ imageBlock image =
                 , Css.width (pct 100)
                 , Css.padding (rem 0.5)
                 , Css.alignSelf Css.flexStart
+
+                -- Frame only top of caption.
+                , framedBorderStyle
+                , Css.borderLeft zero
+                , Css.borderRight zero
+                , Css.borderBottom zero
                 ]
             ]
             (paragraph [] image.caption
@@ -533,9 +539,14 @@ framedStyle =
             0.5
     in
     Css.batch
-        [ Css.border3 (px 1) Css.solid (Css.hsla 0 0 0 0.25)
+        [ framedBorderStyle
         , Css.borderRadius (rem spacing)
         ]
+
+
+framedBorderStyle : Css.Style
+framedBorderStyle =
+    Css.border3 (px 1) Css.solid (Css.hsla 0 0 0 0.25)
 
 
 backgroundTextStyle : Css.Style
