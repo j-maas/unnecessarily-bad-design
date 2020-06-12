@@ -94,7 +94,7 @@ ccLicense authors =
             , backgroundTextStyle
             ]
         ]
-        [ Html.text ("This article, authored by " ++ authors ++ ", is licensed under ")
+        [ Html.text ("This article, written by " ++ authors ++ ", is licensed under ")
         , viewLink
             { text =
                 let
