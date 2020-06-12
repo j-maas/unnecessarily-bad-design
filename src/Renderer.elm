@@ -1,4 +1,4 @@
-module Renderer exposing (Rendered, body, heading, mainContent, navigation, paragraph, render, renderDocument, renderReference, subheading, title)
+module Renderer exposing (Rendered, backgroundTextStyle, body, heading, mainContent, navigation, paragraph, render, renderDocument, renderReference, subheading, title)
 
 import Css exposing (em, num, pct, px, rem, vh, zero)
 import Css.Global
@@ -71,7 +71,7 @@ renderDocument meta blocks =
                     subheading contents
 
                 Paragraph contents ->
-                    paragraph contents
+                    paragraph [] contents
 
                 CodeBlock code ->
                     codeBlock code
@@ -91,7 +91,6 @@ ccLicense authors =
     Html.footer
         [ css
             [ Css.marginTop (rem 4)
-            , Css.fontStyle Css.italic
             , backgroundTextStyle
             ]
         ]
@@ -241,10 +240,10 @@ headingStyle =
         ]
 
 
-paragraph : List Inline -> Rendered msg
-paragraph content =
+paragraph : List Css.Style -> List Inline -> Rendered msg
+paragraph styles content =
     Html.p
-        [ css [ paragraphStyle ]
+        [ css (paragraphStyle :: styles)
         ]
         (List.map renderInline content)
 
@@ -523,7 +522,7 @@ imageBlock image =
                 , Css.alignSelf Css.flexStart
                 ]
             ]
-            (paragraph image.caption
+            (paragraph [] image.caption
                 :: credits
             )
         ]

@@ -204,7 +204,7 @@ viewIndex allPages =
                     in
                     Html.li []
                         [ Renderer.heading title
-                        , Renderer.paragraph question
+                        , Renderer.paragraph [] question
                         ]
                 )
                 things
@@ -226,7 +226,7 @@ viewIndex allPages =
                 ]
                     |> List.map Document.FlatInline
           in
-          Renderer.paragraph contribute
+          Renderer.paragraph [ Renderer.backgroundTextStyle ] contribute
         ]
 
 
