@@ -259,12 +259,12 @@ paragraphStyle =
 
 bodyFontFamily : Css.Style
 bodyFontFamily =
-    Css.fontFamilies [ "Rubik", "sans-serif" ]
+    Css.fontFamilies [ "Rubik", "Verdana", "sans-serif" ]
 
 
 headingFontFamily : Css.Style
 headingFontFamily =
-    Css.fontFamilies [ "Merriweather", "serif" ]
+    Css.fontFamilies [ "Merriweather", "Georgia", "serif" ]
 
 
 paragraphFontStyle : Css.Style
