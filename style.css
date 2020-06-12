@@ -5,8 +5,8 @@
     font-weight: 700;
     font-display: swap;
     src: local('Merriweather Bold'), local('Merriweather-Bold'),
-            url('/unnecessarily-bad-design/fonts/merriweather-v21-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-            url('/unnecessarily-bad-design/fonts/merriweather-v21-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+            url('./fonts/merriweather-v21-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+            url('./fonts/merriweather-v21-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
   
 /* rubik-regular - latin */
@@ -16,8 +16,8 @@
     font-weight: 400;
     font-display: swap;
     src: local('Rubik'), local('Rubik-Regular'),
-         url('/unnecessarily-bad-design/fonts/rubik-v9-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-         url('/unnecessarily-bad-design/fonts/rubik-v9-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+         url('./fonts/rubik-v9-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+         url('./fonts/rubik-v9-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
   
 /* rubik-italic - latin */
@@ -27,8 +27,8 @@
     font-weight: 400;
     font-display: swap;
     src: local('Rubik Italic'), local('Rubik-Italic'),
-            url('/unnecessarily-bad-design/fonts/rubik-v9-latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-            url('/unnecessarily-bad-design/fonts/rubik-v9-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+            url('./fonts/rubik-v9-latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+            url('./fonts/rubik-v9-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
 /* rubik-700 - latin */
@@ -38,8 +38,8 @@
     font-weight: 700;
     font-display: swap;
     src: local('Rubik Bold'), local('Rubik-Bold'),
-            url('/unnecessarily-bad-design/fonts/rubik-v9-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-            url('/unnecessarily-bad-design/fonts/rubik-v9-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+            url('./fonts/rubik-v9-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+            url('./fonts/rubik-v9-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
 /* rubik-700italic - latin */
@@ -49,6 +49,6 @@
     font-weight: 700;
     font-display: swap;
     src: local('Rubik Bold Italic'), local('Rubik-BoldItalic'),
-            url('//unnecessarily-bad-design/fonts/rubik-v9-latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-            url('//unnecessarily-bad-design/fonts/rubik-v9-latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+            url('/./fonts/rubik-v9-latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+            url('/./fonts/rubik-v9-latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
