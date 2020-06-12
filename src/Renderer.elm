@@ -95,36 +95,34 @@ ccLicense authors =
             ]
         ]
         [ Html.text ("This article, authored by " ++ authors ++ ", is licensed under ")
-        , Html.span
-            -- Prevent the full stop from breaking from the last icon.
-            [ css [ Css.whiteSpace Css.noWrap ] ]
-            [ viewLink
-                { text =
-                    let
-                        icon path styles =
-                            Html.img
-                                [ Attributes.src (ImagePath.toString path)
-                                , css
-                                    ([ Css.width (em 0.9)
-                                     , Css.height Css.auto
-                                     , Css.verticalAlign Css.middle
-                                     ]
-                                        ++ styles
-                                    )
-                                ]
-                                []
-                    in
-                    [ Html.text "CC BY 4.0"
-                    , icon Pages.images.cc.cc [ Css.paddingLeft (em 0.2) ]
+        , viewLink
+            { text =
+                let
+                    icon path styles =
+                        Html.img
+                            [ Attributes.src (ImagePath.toString path)
+                            , css
+                                ([ Css.width (em 0.9)
+                                 , Css.height Css.auto
+                                 , Css.verticalAlign Css.middle
+                                 ]
+                                    ++ styles
+                                )
+                            ]
+                            []
+                in
+                [ Html.text "CC BY 4.0"
+                , Html.span [ css [ Css.whiteSpace Css.noWrap ] ]
+                    [ icon Pages.images.cc.cc [ Css.paddingLeft (em 0.2) ]
                     , icon Pages.images.cc.by [ Css.paddingLeft (em 0.1) ]
                     ]
-                , url = "https://creativecommons.org/licenses/by/4.0/"
+                ]
+            , url = "https://creativecommons.org/licenses/by/4.0/"
 
-                -- Break normally inside the link.
-                , styles = [ Css.whiteSpace Css.normal ]
-                }
-            , Html.text "."
-            ]
+            -- Break normally inside the link.
+            , styles = []
+            }
+        , Html.text "."
         ]
 
 
