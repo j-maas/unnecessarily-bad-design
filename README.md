@@ -7,6 +7,10 @@ Unnecessarily bad design means
 ## License and contribution
 The software is licensed under the [MIT license](./LICENSE).
 
+All content, unless stated otherwise, is original work licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+All contributions will be published under these licenses.
+
 ## Development
 ```bash
 npm install

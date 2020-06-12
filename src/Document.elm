@@ -1,4 +1,4 @@
-module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, ImagePath, Inline(..), Key(..), Keys, Link, Path, Reference, Text, TextStyle, plainText, codeLanguageFromString, imagePathFromString, keyFromString, keysFromString, pathFromString)
+module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, ImagePath, Inline(..), Key(..), Keys, Link, Path, Reference, Text, TextStyle, codeLanguageFromString, imagePathFromString, keyFromString, keysFromString, pathFromString, plainText)
 
 import List.Extra as List
 import Pages exposing (PathKey)

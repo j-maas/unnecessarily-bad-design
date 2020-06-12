@@ -144,7 +144,7 @@ viewPage allPages page document =
                         Document.Title title :: questionInline :: document
 
                     rendered =
-                        Renderer.renderDocument fullDocument
+                        Renderer.renderDocument metadata fullDocument
                 in
                 Renderer.body
                     (navigation
