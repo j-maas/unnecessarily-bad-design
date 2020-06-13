@@ -576,6 +576,7 @@ renderNote content =
                     ]
                 ]
             , Css.display Css.inline
+            , Css.whiteSpace Css.noWrap -- prevents the box from sitting alone on a line
             ]
         ]
         [ Html.input
@@ -587,10 +588,11 @@ renderNote content =
         , Html.small
             [ css
                 [ Css.display Css.none
-                , Css.padding2 (em 0.25) zero
+                , Css.padding2 (rem 0.25) (rem 0.5)
                 , framedStyle
-                , Css.margin2 (rem 0.5) (rem 1)
+                , Css.margin2 (rem 0.5) (rem 0.5)
                 , Css.fontSize (em 1)
+                , Css.whiteSpace Css.normal -- allows normal line breaks for text
                 ]
             ]
             (List.map renderFlatInline content)
