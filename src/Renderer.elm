@@ -576,13 +576,15 @@ renderNote content =
                     ]
                 ]
             , Css.display Css.inline
-            , Css.whiteSpace Css.noWrap -- prevents the box from sitting alone on a line
             ]
         ]
         [ Html.input
             [ Attributes.type_ "checkbox"
             , Attributes.attribute "aria-label" "Toggle whether note is shown"
-            , css [ Css.verticalAlign Css.middle ]
+            , css
+                [ Css.verticalAlign Css.middle
+                , Css.margin zero
+                ]
             ]
             []
         , Html.small
@@ -592,7 +594,6 @@ renderNote content =
                 , framedStyle
                 , Css.margin2 (rem 0.5) (rem 0.5)
                 , Css.fontSize (em 1)
-                , Css.whiteSpace Css.normal -- allows normal line breaks for text
                 ]
             ]
             (List.map renderFlatInline content)
