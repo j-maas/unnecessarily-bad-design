@@ -101,10 +101,13 @@ ccLicense authors =
                     icon path styles =
                         Html.img
                             [ Attributes.src (ImagePath.toString path)
+                            , Attributes.width 14
+                            , Attributes.height 14
                             , css
                                 ([ Css.width (em 0.9)
                                  , Css.height Css.auto
-                                 , Css.verticalAlign Css.middle
+                                 , Css.position Css.relative
+                                 , Css.bottom (em -0.1)
                                  ]
                                     ++ styles
                                 )
