@@ -8,8 +8,6 @@ authors: Johannes Maas
 |> Image
     src=images/traffic-lights/pedestrian-green.jpg
     alt=A pedestrian traffic light signaling green.
-    width=4800
-    height=3200
     credit=[from Pexels]{link|url=https://www.pexels.com/de-de/foto/ampel-automatisch-bewegung-draussen-442584/} by [JESHOOTS.com]{link|url=https://www.pexels.com/de-de/@jeshoots-com-147458/} under [Pexel's license]{link|url=https://www.pexels.com/license} 
     caption=It might be green now. But will I make it onto the crossing in time?
 

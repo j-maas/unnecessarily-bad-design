@@ -163,8 +163,6 @@ type alias ImagePath =
 type alias Image =
     { src : ImagePath
     , alt : String
-    , width : Int
-    , height : Int
     , caption : List Inline
     , credit : Maybe (List Inline)
     }

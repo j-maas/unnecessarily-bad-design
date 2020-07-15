@@ -239,20 +239,16 @@ keyMark =
 imageMark : Mark.Block Block
 imageMark =
     Mark.record "Image"
-        (\src alt width height caption credit ->
+        (\src alt caption credit ->
             Document.ImageBlock
                 { src = src
                 , alt = alt
-                , width = width
-                , height = height
                 , caption = caption
                 , credit = credit
                 }
         )
         |> Mark.field "src" imagePathMark
         |> Mark.field "alt" Mark.string
-        |> Mark.field "width" Mark.int
-        |> Mark.field "height" Mark.int
         |> Mark.field "caption" richTextMark
         |> Mark.field "credit" optionalRichtTextMark
         |> Mark.toBlock
