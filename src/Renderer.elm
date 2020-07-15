@@ -505,7 +505,9 @@ imageBlock image =
         ]
         [ let
             dimensions =
-                ImagePath.dimensions image.src |> Maybe.withDefault { width = 0, height = 0 }
+                ImagePath.dimensions image.src
+                    -- We know that all our images are internal and thus have dimensions.
+                    |> Maybe.withDefault { width = 0, height = 0 }
           in
           Html.img
             [ Attributes.src (ImagePath.toString image.src)
