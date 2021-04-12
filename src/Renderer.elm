@@ -103,6 +103,7 @@ ccLicense authors =
                             [ Attributes.src (ImagePath.toString path)
                             , Attributes.width 14
                             , Attributes.height 14
+                            , Attributes.alt ""
                             , css
                                 ([ Css.width (em 0.9)
                                  , Css.height Css.auto
