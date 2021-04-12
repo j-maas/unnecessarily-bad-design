@@ -286,7 +286,7 @@ siteTagline =
 favicon : Seo.Image PathKey
 favicon =
     { url = images.favicon
-    , alt = "A red pedestrian traffic light"
+    , alt = "A stove knob's label highlighting which heating plate it controls"
     , dimensions = Nothing
     , mimeType = Nothing
     }
