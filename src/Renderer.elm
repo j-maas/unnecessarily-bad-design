@@ -579,14 +579,20 @@ backgroundTextStyle =
 renderNote : List FlatInline -> Rendered msg
 renderNote content =
     Html.span
-        [ css
+        [ let
+            active =
+                Css.batch
+                    [ Css.backgroundImage (Css.url (ImagePath.toString Pages.images.bookmarkFilled))
+                    ]
+          in
+          css
             [ Css.Global.children
                 [ Css.Global.typeSelector "input"
                     [ Css.pseudoClass "checked"
                         [ Css.Global.generalSiblings
                             [ Css.Global.typeSelector "label"
                                 [ Css.before
-                                    [ Css.backgroundImage (Css.url (ImagePath.toString Pages.images.bookmarkFilled))
+                                    [ active
                                     ]
                                 ]
                             ]
@@ -601,7 +607,18 @@ renderNote content =
                         ]
                     ]
                 ]
+            , Css.pseudoClass "focus-within"
+                [ Css.Global.children
+                    [ Css.Global.typeSelector "small"
+                        [ Css.display Css.block
+                        ]
+                    , Css.Global.typeSelector "label"
+                        [ Css.before [ active ]
+                        ]
+                    ]
+                ]
             , Css.display Css.inline
+            , Css.position Css.relative
             ]
         ]
         [ Html.input
@@ -628,6 +645,19 @@ renderNote content =
                     , Css.backgroundRepeat Css.noRepeat
                     , Css.cursor Css.pointer
                     ]
+                ]
+            ]
+            []
+        , Html.span
+            [ Attributes.tabindex 0
+            , css
+                [ Css.position Css.absolute
+                , Css.width (rem 0.7)
+                , Css.height (rem 0.8)
+                , Css.top (rem 0.05)
+                , Css.left (rem -0.05)
+                , Css.padding2 (rem 0.08) (rem 0.05)
+                , Css.pointerEvents Css.none
                 ]
             ]
             []
