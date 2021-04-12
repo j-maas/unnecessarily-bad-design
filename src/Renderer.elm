@@ -426,7 +426,7 @@ renderKeys keys =
 renderKey : Document.Key -> Rendered msg
 renderKey key =
     let
-        borderColor =
+        keyBorderColor =
             Css.hsl 0 0 0.75
 
         keyText =
@@ -458,9 +458,9 @@ renderKey key =
             [ codeFontStyle
             , Css.fontSize (em 0.8)
             , Css.padding2 (em 0) (em 0.1)
-            , Css.border3 (px 1) Css.solid borderColor
+            , Css.border3 (px 1) Css.solid keyBorderColor
             , Css.borderRadius (em 0.2)
-            , Css.boxShadow5 Css.inset zero (px -1) zero borderColor
+            , Css.boxShadow5 Css.inset zero (px -1) zero keyBorderColor
             , Css.verticalAlign Css.center
             , Css.whiteSpace Css.pre
             ]
@@ -555,7 +555,12 @@ framedStyle =
 
 framedBorderStyle : Css.Style
 framedBorderStyle =
-    Css.border3 (px 1) Css.solid (Css.hsla 0 0 0 0.25)
+    Css.border3 (px 1) Css.solid borderColor
+
+
+borderColor : Css.Color
+borderColor =
+    Css.hsla 0 0 0 0.25
 
 
 backgroundTextStyle : Css.Style
@@ -577,7 +582,18 @@ renderNote content =
             [ Css.Global.children
                 [ Css.Global.typeSelector "input"
                     [ Css.pseudoClass "checked"
-                        [ Css.Global.adjacentSiblings
+                        [ Css.Global.generalSiblings
+                            [ Css.Global.typeSelector "label"
+                                [ Css.before
+                                    [ Css.backgroundImage (Css.url (ImagePath.toString Pages.images.bookmarkFilled))
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                , Css.Global.typeSelector "input"
+                    [ Css.pseudoClass "checked"
+                        [ Css.Global.generalSiblings
                             [ Css.Global.typeSelector "small"
                                 [ Css.display Css.block ]
                             ]
@@ -588,7 +604,9 @@ renderNote content =
             ]
         ]
         [ Html.input
-            [ Attributes.type_ "checkbox"
+            [ Attributes.id "note"
+            , Attributes.type_ "checkbox"
+            , Attributes.hidden True
             , Attributes.attribute "aria-label" "Toggle whether note is shown"
             , css
                 [ Css.verticalAlign Css.middle
@@ -596,11 +614,27 @@ renderNote content =
                 ]
             ]
             []
+        , Html.label
+            [ Attributes.for "note"
+            , css
+                [ Css.before
+                    [ Css.property "content" "\"\""
+                    , Css.backgroundImage (Css.url (ImagePath.toString Pages.images.bookmark))
+                    , Css.display Css.inlineBlock
+                    , Css.width (rem 0.7)
+                    , Css.height (rem 0.8)
+                    , Css.backgroundSize Css.contain
+                    , Css.backgroundRepeat Css.noRepeat
+                    , Css.cursor Css.pointer
+                    ]
+                ]
+            ]
+            []
         , Html.small
             [ css
                 [ Css.display Css.none
                 , Css.padding2 (rem 0.25) (rem 0.5)
-                , framedStyle
+                , Css.borderLeft3 (rem 0.3) Css.solid borderColor
                 , Css.margin2 (rem 0.5) (rem 0.5)
                 , Css.fontSize (em 1)
                 ]
