@@ -1,16 +1,10 @@
 {
+  "name": "elm-pages-app",
   "scripts": {
-    "start": "elm-pages develop",
-    "serve": "npm run build && http-server ./dist -a localhost -p 3000 -c-1",
+    "start": "elm-pages dev",
     "build": "elm-pages build"
   },
-  "dependencies": {
-    "elm-pages": "^1.4.2",
-    "node-sass": "^4.14.1"
-  },
   "devDependencies": {
-    "elm": "latest-0.19.1",
-    "elm-format": "^0.8.3",
-    "http-server": "^0.12.3"
+    "elm-pages": "^2.0.1"
   }
 }

@@ -1,9 +1,6 @@
-module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, ImagePath, Inline(..), Key(..), Keys, Link, Path, Reference, Text, TextStyle, codeLanguageFromString, imagePathFromString, keyFromString, keysFromString, pathFromString, plainText)
+module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, Inline(..), Key(..), Keys, Link, Reference, Text, TextStyle, codeLanguageFromString, keyFromString, keysFromString, plainText)
 
 import List.Extra as List
-import Pages exposing (PathKey)
-import Pages.ImagePath
-import Pages.PagePath
 import Url exposing (Url)
 
 
@@ -59,18 +56,9 @@ type alias Link =
     }
 
 
-type alias Path =
-    Pages.PagePath.PagePath PathKey
-
-
-pathFromString : String -> Maybe Path
-pathFromString raw =
-    List.find (\page -> raw == Pages.PagePath.toString page) Pages.allPages
-
-
 type alias Reference =
     { text : List Text
-    , path : Path
+    , path : String
     }
 
 
@@ -156,18 +144,9 @@ keyFromString raw =
             Nothing
 
 
-type alias ImagePath =
-    Pages.ImagePath.ImagePath PathKey
-
-
 type alias Image =
-    { src : ImagePath
+    { src : String
     , alt : String
     , caption : List Inline
     , credit : Maybe (List Inline)
     }
-
-
-imagePathFromString : String -> Maybe ImagePath
-imagePathFromString raw =
-    List.find (\page -> raw == Pages.ImagePath.toString page) Pages.allImages

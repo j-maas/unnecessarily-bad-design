@@ -1,36 +1,23 @@
-module Markup exposing (document)
+module Markup exposing (compile)
 
 import Document exposing (Block(..), Document, Text)
 import Json.Decode exposing (Decoder)
 import Mark
 import Mark.Error
-import Metadata exposing (Metadata)
 import Url exposing (Url)
 
 
-type alias PagesDocument =
-    { extension : String
-    , metadata : Decoder Metadata
-    , body : String -> Result String Document
-    }
+compile : String -> Result String Document
+compile rawText =
+    case Mark.compile bodyDocument rawText of
+        Mark.Success blocks ->
+            Ok blocks
 
+        Mark.Almost partial ->
+            Err (errorsToString partial.errors)
 
-document : PagesDocument
-document =
-    { extension = "emu"
-    , metadata = Metadata.decoder
-    , body =
-        \rawText ->
-            case Mark.compile bodyDocument rawText of
-                Mark.Success blocks ->
-                    Ok blocks
-
-                Mark.Almost partial ->
-                    Err (errorsToString partial.errors)
-
-                Mark.Failure errors ->
-                    Err (errorsToString errors)
-    }
+        Mark.Failure errors ->
+            Err (errorsToString errors)
 
 
 errorsToString : List Mark.Error.Error -> String
@@ -179,17 +166,9 @@ referenceInline mapping =
         |> Mark.field "path" pathMark
 
 
-pathMark : Mark.Block Document.Path
+pathMark : Mark.Block String
 pathMark =
     Mark.string
-        |> Mark.verify
-            (\str ->
-                Document.pathFromString str
-                    |> Result.fromMaybe
-                        { title = "Dead reference"
-                        , message = [ "This reference does not match any of the existing pages." ]
-                        }
-            )
 
 
 bashInline : (Document.FlatInline -> a) -> Mark.Record a
@@ -254,17 +233,9 @@ imageMark =
         |> Mark.toBlock
 
 
-imagePathMark : Mark.Block Document.ImagePath
+imagePathMark : Mark.Block String
 imagePathMark =
     Mark.string
-        |> Mark.verify
-            (\str ->
-                Document.imagePathFromString str
-                    |> Result.fromMaybe
-                        { title = "Invalid image path"
-                        , message = [ "This path does not refer to an image." ]
-                        }
-            )
 
 
 optionalRichtTextMark : Mark.Block (Maybe (List Document.Inline))
