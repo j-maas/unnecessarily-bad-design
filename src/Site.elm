@@ -16,12 +16,11 @@ type alias Data =
 
 config : SiteConfig Data
 config =
-    \_ ->
-        { data = data
-        , canonicalUrl = "https://y0hy0h.github.io/unnecessarily-bad-design/"
-        , manifest = manifest
-        , head = head
-        }
+    { data = data
+    , canonicalUrl = "https://y0hy0h.github.io/unnecessarily-bad-design/"
+    , manifest = manifest
+    , head = head
+    }
 
 
 data : DataSource.DataSource Data
