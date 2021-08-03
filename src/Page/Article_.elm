@@ -11,6 +11,7 @@ import Pages.Url
 import Path
 import Renderer
 import Shared
+import Site
 import View exposing (View)
 
 
@@ -51,20 +52,14 @@ head :
     StaticPayload Data RouteParams
     -> List Head.Tag
 head static =
-    Seo.summary
-        { canonicalUrlOverride = Nothing
-        , siteName = "elm-pages"
-        , image =
-            { url = Pages.Url.external "TODO"
-            , alt = "elm-pages logo"
-            , dimensions = Nothing
-            , mimeType = Nothing
+    Site.siteSeoBase { title = fullTitle static.data.frontmatter.title, description = static.data.frontmatter.question }
+        |> Seo.article
+            { tags = []
+            , section = Just "Interaction Design"
+            , publishedTime = Nothing
+            , modifiedTime = Nothing
+            , expirationTime = Nothing
             }
-        , description = "TODO"
-        , locale = Nothing
-        , title = "TODO title" -- metadata.title -- TODO
-        }
-        |> Seo.website
 
 
 type alias Data =
@@ -89,7 +84,7 @@ view maybeUrl sharedModel static =
                 |> Document.Paragraph
 
         title =
-            article.frontmatter.title ++ ", an unnecessarily bad design"
+            fullTitle article.frontmatter.title
 
         fullDocument =
             Document.Title title :: questionInline :: article.document
@@ -109,3 +104,8 @@ view maybeUrl sharedModel static =
                    ]
             )
     }
+
+
+fullTitle : String -> String
+fullTitle shortTitle =
+    shortTitle ++ ", an unnecessarily bad design"

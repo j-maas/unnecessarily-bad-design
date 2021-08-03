@@ -8,12 +8,13 @@ import Document
 import Head
 import Head.Seo as Seo
 import Html.Styled as Html
-import Html.Styled.Attributes as Attributes exposing (css)
+import Html.Styled.Attributes exposing (css)
 import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
-import Pages.Url
+import Pages.Url as Url
 import Renderer
 import Shared
+import Site
 import Url
 import View exposing (View)
 
@@ -48,19 +49,7 @@ head :
     StaticPayload Data RouteParams
     -> List Head.Tag
 head _ =
-    Seo.summary
-        { canonicalUrlOverride = Nothing
-        , siteName = "elm-pages"
-        , image =
-            { url = Pages.Url.external "TODO"
-            , alt = "elm-pages logo"
-            , dimensions = Nothing
-            , mimeType = Nothing
-            }
-        , description = "TODO"
-        , locale = Nothing
-        , title = "TODO title" -- metadata.title -- TODO
-        }
+    Site.siteSeoBase { title = Site.siteName, description = Site.siteDescription }
         |> Seo.website
 
 
@@ -74,7 +63,7 @@ view :
     -> StaticPayload Data RouteParams
     -> View Msg
 view _ _ static =
-    { title = "Index"
+    { title = "Unnecessarily bad design"
     , body =
         Renderer.body
             [ Renderer.title "Unnecessarily bad design"

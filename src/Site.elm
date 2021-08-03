@@ -1,7 +1,8 @@
-module Site exposing (config)
+module Site exposing (config, faviconAlt, faviconPath, siteDescription, siteName, siteSeoBase)
 
 import DataSource
 import Head
+import Head.Seo as Seo
 import MimeType
 import Pages.Manifest as Manifest
 import Pages.Url as Url
@@ -31,8 +32,18 @@ data =
 head : Data -> List Head.Tag
 head static =
     [ Head.sitemapLink "/sitemap.xml"
-    , Head.icon [] svgMimeType (Url.fromPath <| Path.join [ "favicon.svg" ])
+    , Head.icon [] svgMimeType (Url.fromPath <| faviconPath)
     ]
+
+
+faviconPath : Path.Path
+faviconPath =
+    Path.join [ "favicon.svg" ]
+
+
+faviconAlt : String
+faviconAlt =
+    "A stove's pictogram indicating that the knob controls the bottom left heating plate."
 
 
 svgMimeType : MimeType.MimeImage
@@ -43,8 +54,35 @@ svgMimeType =
 manifest : Data -> Manifest.Config
 manifest static =
     Manifest.init
-        { name = "Unnecessarily bad design"
-        , description = "Things that hard to use for no damn reason."
+        { name = siteName
+        , description = siteDescription
         , startUrl = Route.Index |> Route.toPath
         , icons = []
+        }
+
+
+siteName : String
+siteName =
+    "Unnecessarily bad design"
+
+
+siteDescription : String
+siteDescription =
+    "Things that hard to use for no damn reason."
+
+
+siteSeoBase : { title : String, description : String } -> Seo.Common
+siteSeoBase { title, description } =
+    Seo.summary
+        { canonicalUrlOverride = Nothing
+        , siteName = siteName
+        , image =
+            { url = Url.fromPath faviconPath
+            , alt = faviconAlt
+            , dimensions = Nothing
+            , mimeType = Nothing
+            }
+        , description = description
+        , locale = Nothing
+        , title = title
         }
