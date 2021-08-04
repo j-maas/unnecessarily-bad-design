@@ -111,7 +111,6 @@ flatTextMark =
 flatInlines : (Document.FlatInline -> a) -> List (Mark.Record a)
 flatInlines mapping =
     [ linkInline mapping
-    , referenceInline mapping
     , bashInline mapping
     , keyInline mapping
     ]
@@ -150,24 +149,6 @@ urlMark =
                         , message = [ "This URL is not in a valid format." ]
                         }
             )
-
-
-referenceInline : (Document.FlatInline -> a) -> Mark.Record a
-referenceInline mapping =
-    Mark.annotation "ref"
-        (\styledContents path ->
-            Document.ReferenceInline
-                { text = List.map (\( styles, text ) -> convertText styles text) styledContents
-                , path = path
-                }
-                |> mapping
-        )
-        |> Mark.field "path" pathMark
-
-
-pathMark : Mark.Block String
-pathMark =
-    Mark.string
 
 
 bashInline : (Document.FlatInline -> a) -> Mark.Record a
