@@ -504,7 +504,7 @@ imageBlock image =
                 { width = 0, height = 0 }
           in
           Html.img
-            [ Attributes.src image.src
+            [ Attributes.src (Document.pathToString image.src)
             , Attributes.alt image.alt
             , Attributes.width dimensions.width
             , Attributes.height dimensions.height

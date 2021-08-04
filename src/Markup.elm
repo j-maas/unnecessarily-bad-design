@@ -1,12 +1,16 @@
 module Markup exposing (compile)
 
+import DataSource exposing (DataSource)
+import DataSource.Glob as Glob
 import Document exposing (Block(..), Document, Text)
+import Html.Attributes exposing (src)
 import Mark
 import Mark.Error
+import Path exposing (Path)
 import Url exposing (Url)
 
 
-compile : String -> Result String Document
+compile : String -> Result String (DataSource Document)
 compile rawText =
     case Mark.compile bodyDocument rawText of
         Mark.Success blocks ->
@@ -25,10 +29,10 @@ errorsToString errors =
         |> String.join "\n"
 
 
-bodyDocument : Mark.Document Document
+bodyDocument : Mark.Document (DataSource Document)
 bodyDocument =
     Mark.document
-        (\blocks -> blocks)
+        (\blocks -> DataSource.combine blocks)
         (Mark.manyOf
             [ headingMark
             , subheadingMark
@@ -39,24 +43,24 @@ bodyDocument =
         )
 
 
-headingMark : Mark.Block Block
+headingMark : Mark.Block (DataSource Block)
 headingMark =
     Mark.block "Heading"
-        Heading
+        (Heading >> DataSource.succeed)
         richTextMark
 
 
-subheadingMark : Mark.Block Block
+subheadingMark : Mark.Block (DataSource Block)
 subheadingMark =
     Mark.block "Subheading"
-        Subheading
+        (Subheading >> DataSource.succeed)
         richTextMark
 
 
-paragraphMark : Mark.Block Block
+paragraphMark : Mark.Block (DataSource Block)
 paragraphMark =
     richTextMark
-        |> Mark.map Paragraph
+        |> Mark.map (Paragraph >> DataSource.succeed)
 
 
 richTextMark : Mark.Block (List Document.Inline)
@@ -163,11 +167,12 @@ bashInline mapping =
         )
 
 
-bashMark : Mark.Block Block
+bashMark : Mark.Block (DataSource Block)
 bashMark =
     Mark.block "Bash"
         (\code ->
             CodeBlock { language = Document.Bash, src = code }
+                |> DataSource.succeed
         )
         Mark.string
 
@@ -195,16 +200,20 @@ keyMark =
             )
 
 
-imageMark : Mark.Block Block
+imageMark : Mark.Block (DataSource Block)
 imageMark =
     Mark.record "Image"
-        (\src alt caption credit ->
-            Document.ImageBlock
-                { src = src
-                , alt = alt
-                , caption = caption
-                , credit = credit
-                }
+        (\srcDataSource alt caption credit ->
+            DataSource.map
+                (\src ->
+                    Document.ImageBlock
+                        { src = src
+                        , alt = alt
+                        , caption = caption
+                        , credit = credit
+                        }
+                )
+                srcDataSource
         )
         |> Mark.field "src" imagePathMark
         |> Mark.field "alt" Mark.string
@@ -213,9 +222,34 @@ imageMark =
         |> Mark.toBlock
 
 
-imagePathMark : Mark.Block String
+imagePathMark : Mark.Block (DataSource ImagePath)
 imagePathMark =
     Mark.string
+        |> Mark.map imagePathFromString
+
+
+type alias ImagePath =
+    Document.Path
+
+
+imagePathFromString : String -> DataSource ImagePath
+imagePathFromString raw =
+    Glob.succeed identity
+        |> Glob.match (Glob.literal "public/")
+        |> Glob.capture (Glob.literal <| "images/" ++ raw)
+        |> Glob.toDataSource
+        |> DataSource.andThen
+            (\validPaths ->
+                case validPaths of
+                    [ validPath ] ->
+                        DataSource.succeed (Document.promisePath validPath)
+
+                    [] ->
+                        DataSource.fail <| "Did not find image at path `" ++ raw ++ "`."
+
+                    paths ->
+                        DataSource.fail <| "Too many candidates found for path `" ++ raw ++ "`: " ++ String.join ", " paths
+            )
 
 
 optionalRichtTextMark : Mark.Block (Maybe (List Document.Inline))

@@ -4,7 +4,7 @@ question: Does it take more time to set up the machine than to warm your food?
 authors: Johannes Maas
 ---
 |> Image
-    src=images/microwave-ovens/microwave-oven.jpg
+    src=microwave-ovens/microwave-oven.jpg
     alt=A microwave with 18 buttons labeled in Japanese.
     credit=[from Flickr]{link|url=https://flic.kr/p/5LQHa9} by [Jeremy Hall]{link|url=https://www.flickr.com/photos/wallslide/} under [CC BY 2.0]{link|url=https://creativecommons.org/licenses/by/2.0/}, cropped
     caption=Even if the controls are labeled in a foreign language, I should be able to cook my food.

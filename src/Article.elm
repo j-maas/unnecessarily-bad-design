@@ -1,4 +1,4 @@
-module Article exposing (Frontmatter, allArticles, Article, allArticlesFrontmatter, articleForSlug, frontmatterForSlug)
+module Article exposing (Article, Frontmatter, allArticles, allArticlesFrontmatter, articleForSlug, frontmatterForSlug)
 
 import DataSource exposing (DataSource)
 import DataSource.File as File
@@ -35,6 +35,7 @@ allArticlesFrontmatter =
         |> DataSource.map (List.map frontmatterForSlug)
         |> DataSource.resolve
 
+
 glob : DataSource (List String)
 glob =
     Glob.succeed (\slug -> slug)
@@ -53,16 +54,25 @@ articleForSlug : String -> DataSource Article
 articleForSlug slug =
     File.bodyWithFrontmatter
         (\body ->
-            Decode.map2
-                (\frontmatter document ->
-                    { frontmatter = frontmatter
-                    , document = document
-                    }
-                )
-                (frontMatterDecoder slug)
-                (Markup.compile body |> Decode.fromResult)
+            frontMatterDecoder slug
+                |> Decode.map
+                    (\frontmatter ->
+                        { frontmatter = frontmatter
+                        , body = body
+                        }
+                    )
         )
         (filePathFromSlug slug)
+        |> DataSource.andThen
+            (\raw ->
+                Markup.compile raw.body
+                    |> DataSource.fromResult
+                    |> DataSource.andThen identity
+                    |> DataSource.map
+                        (\document ->
+                            { frontmatter = raw.frontmatter, document = document }
+                        )
+            )
 
 
 filePathFromSlug : String -> String

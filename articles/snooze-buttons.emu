@@ -5,7 +5,7 @@ authors: Johannes Maas
 ---
 
 |> Image
-    src=images/snooze-buttons/ringing-alarm.jpg
+    src=snooze-buttons/ringing-alarm.jpg
     alt=An alarm clock furiously ringing.
     credit=[from Pexels]{link|url=https://www.pexels.com/photo/black-ring-bell-alarm-clock-682422/} by [NEOSiAM 2020]{link|url=https://www.pexels.com/@neo8iam} under [Pexel's license]{link|url=https://www.pexels.com/license} 
     caption=Make it stop! Give me five more minutes of that sweet, sweet sleep...

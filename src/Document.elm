@@ -1,4 +1,4 @@
-module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, Inline(..), Key(..), Keys, Link, Reference, Text, TextStyle, codeLanguageFromString, keyFromString, keysFromString, plainText)
+module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, Inline(..), Key(..), Keys, Link, Path, Reference, Text, TextStyle, codeLanguageFromString, keyFromString, keysFromString, plainText, promisePath, pathToString)
 
 import List.Extra as List
 import Url exposing (Url)
@@ -145,8 +145,22 @@ keyFromString raw =
 
 
 type alias Image =
-    { src : String
+    { src : Path
     , alt : String
     , caption : List Inline
     , credit : Maybe (List Inline)
     }
+
+
+type Path
+    = Path String
+
+
+promisePath : String -> Path
+promisePath path =
+    Path path
+
+
+pathToString : Path -> String
+pathToString (Path path) =
+    path
