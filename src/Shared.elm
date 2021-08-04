@@ -41,8 +41,7 @@ type SharedMsg
 
 
 type alias Model =
-    { showMobileMenu : Bool
-    }
+    ()
 
 
 init :
@@ -60,7 +59,7 @@ init :
             }
     -> ( Model, Cmd Msg )
 init _ _ _ =
-    ( { showMobileMenu = False }
+    ( ()
     , Cmd.none
     )
 
@@ -69,7 +68,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnPageChange _ ->
-            ( { model | showMobileMenu = False }, Cmd.none )
+            ( model, Cmd.none )
 
         SharedMsg _ ->
             ( model, Cmd.none )
