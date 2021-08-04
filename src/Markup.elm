@@ -245,10 +245,10 @@ imagePathFromString raw =
                         DataSource.succeed (Document.promisePath validPath)
 
                     [] ->
-                        DataSource.fail <| "Did not find image at path `" ++ raw ++ "`."
+                        DataSource.fail <| "Did not find image at path `public/images/" ++ raw ++ "`."
 
                     paths ->
-                        DataSource.fail <| "Too many candidates found for path `" ++ raw ++ "`: " ++ String.join ", " paths
+                        DataSource.fail <| "Too many candidates found for path `public/" ++ raw ++ "`: " ++ String.join ", " paths
             )
 
 
