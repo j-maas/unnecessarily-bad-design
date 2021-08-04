@@ -1,7 +1,6 @@
 module Markup exposing (compile)
 
 import Document exposing (Block(..), Document, Text)
-import Json.Decode exposing (Decoder)
 import Mark
 import Mark.Error
 import Url exposing (Url)

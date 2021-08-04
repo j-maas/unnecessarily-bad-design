@@ -1,14 +1,12 @@
 module Renderer exposing (Rendered, backgroundTextStyle, body, heading, mainContent, navigation, paragraph, render, renderDocument, renderReference, subheading, title)
 
 import Article exposing (Article)
-import Css exposing (em, num, pct, px, rem, vh, zero)
+import Css exposing (em, num, pct, px, rem, zero)
 import Css.Global
 import Document exposing (..)
 import Html as PlainHtml
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attributes exposing (css)
-import Pages
-import Pages.PageUrl as PageUrl exposing (PageUrl)
 import Path exposing (Path)
 import Route
 import Url

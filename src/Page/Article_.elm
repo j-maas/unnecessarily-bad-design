@@ -1,14 +1,12 @@
 module Page.Article_ exposing (Data, Model, Msg, page)
 
-import Article exposing (Article, Frontmatter)
+import Article exposing (Article)
 import DataSource exposing (DataSource)
 import Document
 import Head
 import Head.Seo as Seo
-import Page exposing (Page, PageWithState, StaticPayload)
+import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
-import Pages.Url
-import Path
 import Renderer
 import Shared
 import Site
@@ -71,7 +69,7 @@ view :
     -> Shared.Model
     -> StaticPayload Data RouteParams
     -> View Msg
-view maybeUrl sharedModel static =
+view _ _ static =
     let
         article =
             static.data
@@ -98,11 +96,10 @@ view maybeUrl sharedModel static =
     { title = title
     , body =
         Renderer.body
-            (Renderer.navigation
-                :: [ Renderer.mainContent
-                        [ rendered ]
-                   ]
-            )
+            [ Renderer.navigation
+            , Renderer.mainContent
+                [ rendered ]
+            ]
     }
 
 
