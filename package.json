@@ -5,6 +5,11 @@
     "build": "elm-pages build"
   },
   "devDependencies": {
-    "elm-pages": "^2.1.4"
-  }
+    "@squoosh/lib": "^0.4.0",
+    "elm-pages": "^2.1.4",
+    "glob": "^7.1.7",
+    "glob-promise": "^4.2.0",
+    "svgo": "^2.3.1"
+  },
+  "dependencies": {}
 }
