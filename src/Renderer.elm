@@ -500,21 +500,38 @@ imageBlock image =
             ]
         ]
         [ let
-            dimensions =
-                { width = 0, height = 0 }
+            ( fallbackSize, extraSizes ) =
+                image.sources
           in
-          Html.img
-            [ Attributes.src (Document.pathToString image.src)
-            , Attributes.alt image.alt
-            , Attributes.width dimensions.width
-            , Attributes.height dimensions.height
-            , css
-                [ Css.maxWidth (pct 100)
-                , Css.width (pct 100)
-                , Css.height Css.auto
-                ]
-            ]
+          Html.node "picture"
             []
+            (List.map
+                (\source ->
+                    Html.source
+                        [ Attributes.attribute "srcset"
+                            (Document.pathToString source.src
+                                ++ " "
+                                ++ String.fromInt source.width
+                                ++ "w"
+                            )
+                        ]
+                        []
+                )
+                extraSizes
+                ++ [ Html.img
+                        [ Attributes.src (Document.pathToString fallbackSize.src)
+                        , Attributes.alt image.alt
+                        , Attributes.width fallbackSize.width
+                        , Attributes.height fallbackSize.height
+                        , css
+                            [ Css.maxWidth (pct 100)
+                            , Css.width (pct 100)
+                            , Css.height Css.auto
+                            ]
+                        ]
+                        []
+                   ]
+            )
         , Html.figcaption
             [ css
                 [ Css.boxSizing Css.borderBox

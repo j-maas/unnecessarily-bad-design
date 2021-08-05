@@ -5,7 +5,7 @@ authors: Johannes Maas
 ---
 
 |> Image
-    src=stove-knobs/stove-knobs.jpg
+    src=images/stove-knobs/stove-knobs
     alt=Two knobs of stove sitting in a row. Each is labeled with a picture of the four heating plates in a grid. The plate controlled by the knob is highlighted.
     credit=[from Flickr]{link|url=https://flic.kr/p/hMEKo} by [Matt MacGillivray]{link|url=https://www.flickr.com/photos/qmnonic/} under [CC BY 2.0]{link|url=https://creativecommons.org/licenses/by/2.0/} 
     caption=Even though they control heating plates that are placed one above of the other, these knobs are placed to the side of each other.

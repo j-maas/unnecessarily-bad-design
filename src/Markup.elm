@@ -2,11 +2,13 @@ module Markup exposing (compile)
 
 import DataSource exposing (DataSource)
 import DataSource.Glob as Glob
-import Document exposing (Block(..), Document, Text)
+import DataSource.Port
+import Document exposing (Block(..), Document, Source, Text)
 import Html.Attributes exposing (src)
+import Json.Encode as Encode
 import Mark
 import Mark.Error
-import Path exposing (Path)
+import OptimizedDecoder as Decode exposing (Decoder)
 import Url exposing (Url)
 
 
@@ -203,53 +205,62 @@ keyMark =
 imageMark : Mark.Block (DataSource Block)
 imageMark =
     Mark.record "Image"
-        (\srcDataSource alt caption credit ->
+        (\sourcesDataSource alt caption credit ->
             DataSource.map
-                (\src ->
+                (\sources ->
                     Document.ImageBlock
-                        { src = src
+                        { sources = sources
                         , alt = alt
                         , caption = caption
                         , credit = credit
                         }
                 )
-                srcDataSource
+                sourcesDataSource
         )
-        |> Mark.field "src" imagePathMark
+        |> Mark.field "src" sourcesMark
         |> Mark.field "alt" Mark.string
         |> Mark.field "caption" richTextMark
         |> Mark.field "credit" optionalRichtTextMark
         |> Mark.toBlock
 
 
-imagePathMark : Mark.Block (DataSource ImagePath)
-imagePathMark =
+sourcesMark : Mark.Block (DataSource ( Source, List Source ))
+sourcesMark =
     Mark.string
-        |> Mark.map imagePathFromString
+        |> Mark.map sourcesFromPath
 
 
-type alias ImagePath =
-    Document.Path
+sourcesFromPath : String -> DataSource ( Source, List Source )
+sourcesFromPath path =
+    DataSource.Port.get "imageSources" (Encode.string path) sourcesDecoder
 
 
-imagePathFromString : String -> DataSource ImagePath
-imagePathFromString raw =
-    Glob.succeed identity
-        |> Glob.match (Glob.literal "public/")
-        |> Glob.capture (Glob.literal <| "images/" ++ raw)
-        |> Glob.toDataSource
-        |> DataSource.andThen
-            (\validPaths ->
-                case validPaths of
-                    [ validPath ] ->
-                        DataSource.succeed (Document.promisePath validPath)
+sourcesDecoder : Decoder ( Source, List Source )
+sourcesDecoder =
+    Decode.list sourceDecoder
+        |> Decode.andThen
+            (\sources ->
+                case sources of
+                    first :: rest ->
+                        Decode.succeed ( first, rest )
 
                     [] ->
-                        DataSource.fail <| "Did not find image at path `public/images/" ++ raw ++ "`."
-
-                    paths ->
-                        DataSource.fail <| "Too many candidates found for path `public/" ++ raw ++ "`: " ++ String.join ", " paths
+                        Decode.fail "No sources given."
             )
+
+
+sourceDecoder : Decoder Source
+sourceDecoder =
+    Decode.map3
+        (\src width height ->
+            { src = Document.promisePath src
+            , width = width
+            , height = height
+            }
+        )
+        (Decode.field "src" Decode.string)
+        (Decode.field "width" Decode.int)
+        (Decode.field "height" Decode.int)
 
 
 optionalRichtTextMark : Mark.Block (Maybe (List Document.Inline))
