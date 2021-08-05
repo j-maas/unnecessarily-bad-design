@@ -3,6 +3,7 @@ module Renderer exposing (Rendered, backgroundTextStyle, body, heading, mainCont
 import Article exposing (Article)
 import Css exposing (em, num, pct, px, rem, zero)
 import Css.Global
+import Dict
 import Document exposing (..)
 import Html as PlainHtml
 import Html.Styled as Html exposing (Html)
@@ -499,30 +500,34 @@ imageBlock image =
             , Css.alignItems Css.center
             ]
         ]
-        [ let
-            ( fallbackSize, extraSizes ) =
-                image.sources
-          in
-          Html.node "picture"
+        [ Html.node "picture"
             []
             (List.map
-                (\source ->
+                (\( mimeType, sources ) ->
+                    let
+                        srcset =
+                            List.map
+                                (\source ->
+                                    Document.pathToString source.src
+                                        ++ " "
+                                        ++ String.fromInt source.width
+                                        ++ "w"
+                                )
+                                sources
+                                |> String.join ", "
+                    in
                     Html.source
-                        [ Attributes.attribute "srcset"
-                            (Document.pathToString source.src
-                                ++ " "
-                                ++ String.fromInt source.width
-                                ++ "w"
-                            )
+                        [ Attributes.attribute "srcset" srcset
+                        , Attributes.type_ mimeType
                         ]
                         []
                 )
-                extraSizes
+                (Dict.toList image.extraSources)
                 ++ [ Html.img
-                        [ Attributes.src (Document.pathToString fallbackSize.src)
+                        [ Attributes.src (Document.pathToString image.fallbackSource.source.src)
                         , Attributes.alt image.alt
-                        , Attributes.width fallbackSize.width
-                        , Attributes.height fallbackSize.height
+                        , Attributes.width image.fallbackSource.source.width
+                        , Attributes.height image.fallbackSource.source.height
                         , css
                             [ Css.maxWidth (pct 100)
                             , Css.width (pct 100)

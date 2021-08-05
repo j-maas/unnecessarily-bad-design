@@ -146,7 +146,8 @@ keyFromString raw =
 
 
 type alias Image =
-    { sources : ( Source, List Source )
+    { fallbackSource : { mimeType : String, source : Source }
+    , extraSources : Dict String (List Source)
     , alt : String
     , caption : List Inline
     , credit : Maybe (List Inline)

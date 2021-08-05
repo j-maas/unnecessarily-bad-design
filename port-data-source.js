@@ -15,14 +15,14 @@ module.exports =
         const info = (await image.decoded).bitmap;
         const sizes = getSizes(info.width, info.height);
         return [
-            { src: `${filePath}.jpg`, width: sizes.original.width, height: sizes.original.height },
-            { src: `${filePath}-large.jpg`, width: sizes.large.width, height: sizes.large.height },
-            { src: `${filePath}-medium.jpg`, width: sizes.medium.width, height: sizes.medium.height },
-            { src: `${filePath}-small.jpg`, width: sizes.small.width, height: sizes.small.height },
-            { src: `${filePath}.webp`, width: sizes.original.width, height: sizes.original.height },
-            { src: `${filePath}-large.webp`, width: sizes.large.width, height: sizes.large.height },
-            { src: `${filePath}-medium.webp`, width: sizes.medium.width, height: sizes.medium.height },
-            { src: `${filePath}-small.webp`, width: sizes.small.width, height: sizes.small.height },
+            { src: `${filePath}.jpg`, width: sizes.original.width, height: sizes.original.height, mimeType: "image/jpeg" },
+            { src: `${filePath}-large.jpg`, width: sizes.large.width, height: sizes.large.height, mimeType: "image/jpeg" },
+            { src: `${filePath}-medium.jpg`, width: sizes.medium.width, height: sizes.medium.height, mimeType: "image/jpeg" },
+            { src: `${filePath}-small.jpg`, width: sizes.small.width, height: sizes.small.height, mimeType: "image/jpeg" },
+            { src: `${filePath}.webp`, width: sizes.original.width, height: sizes.original.height, mimeType: "image/webp" },
+            { src: `${filePath}-large.webp`, width: sizes.large.width, height: sizes.large.height, mimeType: "image/webp" },
+            { src: `${filePath}-medium.webp`, width: sizes.medium.width, height: sizes.medium.height, mimeType: "image/webp" },
+            { src: `${filePath}-small.webp`, width: sizes.small.width, height: sizes.small.height, mimeType: "image/webp" },
         ];
     },
 };

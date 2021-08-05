@@ -3,6 +3,7 @@ module Markup exposing (compile)
 import DataSource exposing (DataSource)
 import DataSource.Glob as Glob
 import DataSource.Port
+import Dict exposing (Dict)
 import Document exposing (Block(..), Document, Source, Text)
 import Html.Attributes exposing (src)
 import Json.Encode as Encode
@@ -207,9 +208,10 @@ imageMark =
     Mark.record "Image"
         (\sourcesDataSource alt caption credit ->
             DataSource.map
-                (\sources ->
+                (\{ fallbackSource, extraSources } ->
                     Document.ImageBlock
-                        { sources = sources
+                        { fallbackSource = fallbackSource
+                        , extraSources = extraSources
                         , alt = alt
                         , caption = caption
                         , credit = credit
@@ -224,18 +226,24 @@ imageMark =
         |> Mark.toBlock
 
 
-sourcesMark : Mark.Block (DataSource ( Source, List Source ))
+type alias Sources =
+    { fallbackSource : { mimeType : String, source : Source }
+    , extraSources : Dict String (List Source)
+    }
+
+
+sourcesMark : Mark.Block (DataSource Sources)
 sourcesMark =
     Mark.string
         |> Mark.map sourcesFromPath
 
 
-sourcesFromPath : String -> DataSource ( Source, List Source )
+sourcesFromPath : String -> DataSource Sources
 sourcesFromPath path =
     DataSource.Port.get "imageSources" (Encode.string path) sourcesDecoder
 
 
-sourcesDecoder : Decoder ( Source, List Source )
+sourcesDecoder : Decoder Sources
 sourcesDecoder =
     Decode.list sourceDecoder
         |> Decode.andThen
@@ -247,20 +255,44 @@ sourcesDecoder =
                     [] ->
                         Decode.fail "No sources given."
             )
+        |> Decode.map
+            (\( ( firstMimeType, firstSource ), rest ) ->
+                { fallbackSource = { mimeType = firstMimeType, source = firstSource }
+                , extraSources =
+                    List.foldl
+                        (\( mimeType, source ) dict ->
+                            Dict.update mimeType
+                                (\maybeSources ->
+                                    case maybeSources of
+                                        Just sources ->
+                                            Just (source :: sources)
+
+                                        Nothing ->
+                                            Just [ source ]
+                                )
+                                dict
+                        )
+                        Dict.empty
+                        rest
+                }
+            )
 
 
-sourceDecoder : Decoder Source
+sourceDecoder : Decoder ( String, Source )
 sourceDecoder =
-    Decode.map3
-        (\src width height ->
-            { src = Document.promisePath src
-            , width = width
-            , height = height
-            }
+    Decode.map4
+        (\src width height mimeType ->
+            ( mimeType
+            , { src = Document.promisePath src
+              , width = width
+              , height = height
+              }
+            )
         )
         (Decode.field "src" Decode.string)
         (Decode.field "width" Decode.int)
         (Decode.field "height" Decode.int)
+        (Decode.field "mimeType" Decode.string)
 
 
 optionalRichtTextMark : Mark.Block (Maybe (List Document.Inline))
