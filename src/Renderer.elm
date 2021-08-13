@@ -529,7 +529,8 @@ imageBlock image =
                         , Attributes.width image.fallbackSource.source.width
                         , Attributes.height image.fallbackSource.source.height
                         , css
-                            [ Css.maxWidth (pct 100)
+                            [ Css.display Css.block -- If left as inline, there will be a small gap at the bottom. See https://gtwebdev.com/workshop/gaps/image-gap.php.
+                            , Css.maxWidth (pct 100)
                             , Css.width (pct 100)
                             , Css.height Css.auto
                             ]
