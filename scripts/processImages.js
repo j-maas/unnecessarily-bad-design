@@ -11,14 +11,14 @@ async function process() {
     // Process pictures
     const picturePaths = await glob(`${inputFolder}/**/*.@(jpg|jpeg|png|webp)`);
     console.log(`Found ${picturePaths.length} pictures.`);
-    await Promise.all(picturePaths.map(async path => {
-        await processPicture(path, getDestinationFolderPath(path));
-    }));
+    for (let filePath of picturePaths) {
+        await processPicture(filePath, getDestinationFolderPath(filePath));
+    }
 
     // Process vector graphics
     const svgPaths = await glob(`${inputFolder}/**/*.svg`);
     console.log(`Found ${svgPaths.length} vector graphics.`);
-    await Promise.all(svgPaths.map(async (filePath, index) => {
+    for (let [index, filePath] of svgPaths.entries()) {
         console.log(`${index + 1}) ${filePath}`);
 
         const svgString = await fs.readFile(filePath);
@@ -27,7 +27,7 @@ async function process() {
 
         const destinationPath = `${getDestinationFolderPath(filePath)}/${path.basename(filePath)}`;
         await writeFile(destinationPath, optimizedSvgString);
-    }));
+    };
 }
 
 function getDestinationFolderPath(filePath) {
@@ -42,12 +42,18 @@ async function processPicture(picturePath, destinationFolderPath) {
 
     // Check if this picture was already processed.
     try {
-        const sourceLastModified = (await fs.stat(picturePath)).mtimeMs;
-        const destinationLastModified = (await fs.stat(`${destinationBase}.jpg`)).mtimeMs;
-        if (destinationLastModified >= sourceLastModified) {
-            console.log(`${picturePath} (already processed)`);
-            return;
-        }
+        const suffixes = [".jpg", "-large.jpg", "-medium.jpg", "-small.jpg",
+            ".webp", "-large.webp", "-medium.webp", "-small.webp",
+        ];
+
+        let allExist = false;
+        for (let suffix of suffixes) {
+            const sourceLastModified = (await fs.stat(picturePath)).mtimeMs;
+            const destinationLastModified = (await fs.stat(`${destinationBase}${suffix}`)).mtimeMs;
+        };
+        // If a path did not exist, we would have thrown an exception by now.
+        console.log(`${picturePath} (already processed)`);
+        return;
     } catch (e) {
         // Picture was not yet processed, do it now.
     }
