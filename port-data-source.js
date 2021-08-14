@@ -1,7 +1,5 @@
-const ImagePool = require('@squoosh/lib').ImagePool;
+const { Image } = require("@y0hy0h/squoosh");
 const { inputFolder, destinationFolder, getSizes } = require("./scripts/processImages");
-
-const imagePool = new ImagePool();
 
 module.exports =
 /**
@@ -11,7 +9,7 @@ module.exports =
 {
     imageSources: async function (filePath) {
         const picturePath = `${destinationFolder}/${filePath}.jpg`;
-        const image = imagePool.ingestImage(picturePath);
+        const image = new Image(picturePath);
         const info = (await image.decoded).bitmap;
         const sizes = getSizes(info.width, info.height);
         return [
