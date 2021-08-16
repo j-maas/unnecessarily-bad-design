@@ -14,12 +14,14 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Build 🛠️
+      - name: Configure node
         uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
           scope: '@y0hy0h'
+
+      - name: Build 🛠️
         run: |
           npm ci
           npm run processImages
