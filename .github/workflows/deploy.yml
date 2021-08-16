@@ -17,13 +17,17 @@ jobs:
       - name: Configure node
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 14
           registry-url: https://npm.pkg.github.com/
           scope: '@y0hy0h'
 
+      - name: Install
+        run: npm ci --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build 🛠️
         run: |
-          npm ci
           npm run processImages
           npm run build
 
