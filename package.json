@@ -7,9 +7,9 @@
   },
   "devDependencies": {
     "@y0hy0h/squoosh": "^0.5.0",
-    "elm-pages": "^2.1.4",
+    "elm-pages": "^2.1.6",
     "glob": "^7.1.7",
     "glob-promise": "^4.2.0",
-    "svgo": "^2.3.1"
+    "svgo": "^2.4.0"
   }
 }
