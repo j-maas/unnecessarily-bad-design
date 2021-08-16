@@ -1,36 +1,29 @@
-module Markup exposing (document)
+module Markup exposing (compile)
 
-import Document exposing (Block(..), Document, Text)
-import Json.Decode exposing (Decoder)
+import DataSource exposing (DataSource)
+import DataSource.Glob as Glob
+import DataSource.Port
+import Dict exposing (Dict)
+import Document exposing (Block(..), Document, Source, Text)
+import Html.Attributes exposing (src)
+import Json.Encode as Encode
 import Mark
 import Mark.Error
-import Metadata exposing (Metadata)
+import OptimizedDecoder as Decode exposing (Decoder)
 import Url exposing (Url)
 
 
-type alias PagesDocument =
-    { extension : String
-    , metadata : Decoder Metadata
-    , body : String -> Result String Document
-    }
+compile : String -> Result String (DataSource Document)
+compile rawText =
+    case Mark.compile bodyDocument rawText of
+        Mark.Success blocks ->
+            Ok blocks
 
+        Mark.Almost partial ->
+            Err (errorsToString partial.errors)
 
-document : PagesDocument
-document =
-    { extension = "emu"
-    , metadata = Metadata.decoder
-    , body =
-        \rawText ->
-            case Mark.compile bodyDocument rawText of
-                Mark.Success blocks ->
-                    Ok blocks
-
-                Mark.Almost partial ->
-                    Err (errorsToString partial.errors)
-
-                Mark.Failure errors ->
-                    Err (errorsToString errors)
-    }
+        Mark.Failure errors ->
+            Err (errorsToString errors)
 
 
 errorsToString : List Mark.Error.Error -> String
@@ -39,10 +32,10 @@ errorsToString errors =
         |> String.join "\n"
 
 
-bodyDocument : Mark.Document Document
+bodyDocument : Mark.Document (DataSource Document)
 bodyDocument =
     Mark.document
-        (\blocks -> blocks)
+        (\blocks -> DataSource.combine blocks)
         (Mark.manyOf
             [ headingMark
             , subheadingMark
@@ -53,24 +46,24 @@ bodyDocument =
         )
 
 
-headingMark : Mark.Block Block
+headingMark : Mark.Block (DataSource Block)
 headingMark =
     Mark.block "Heading"
-        Heading
+        (Heading >> DataSource.succeed)
         richTextMark
 
 
-subheadingMark : Mark.Block Block
+subheadingMark : Mark.Block (DataSource Block)
 subheadingMark =
     Mark.block "Subheading"
-        Subheading
+        (Subheading >> DataSource.succeed)
         richTextMark
 
 
-paragraphMark : Mark.Block Block
+paragraphMark : Mark.Block (DataSource Block)
 paragraphMark =
     richTextMark
-        |> Mark.map Paragraph
+        |> Mark.map (Paragraph >> DataSource.succeed)
 
 
 richTextMark : Mark.Block (List Document.Inline)
@@ -125,7 +118,6 @@ flatTextMark =
 flatInlines : (Document.FlatInline -> a) -> List (Mark.Record a)
 flatInlines mapping =
     [ linkInline mapping
-    , referenceInline mapping
     , bashInline mapping
     , keyInline mapping
     ]
@@ -166,32 +158,6 @@ urlMark =
             )
 
 
-referenceInline : (Document.FlatInline -> a) -> Mark.Record a
-referenceInline mapping =
-    Mark.annotation "ref"
-        (\styledContents path ->
-            Document.ReferenceInline
-                { text = List.map (\( styles, text ) -> convertText styles text) styledContents
-                , path = path
-                }
-                |> mapping
-        )
-        |> Mark.field "path" pathMark
-
-
-pathMark : Mark.Block Document.Path
-pathMark =
-    Mark.string
-        |> Mark.verify
-            (\str ->
-                Document.pathFromString str
-                    |> Result.fromMaybe
-                        { title = "Dead reference"
-                        , message = [ "This reference does not match any of the existing pages." ]
-                        }
-            )
-
-
 bashInline : (Document.FlatInline -> a) -> Mark.Record a
 bashInline mapping =
     Mark.verbatim "bash"
@@ -204,11 +170,12 @@ bashInline mapping =
         )
 
 
-bashMark : Mark.Block Block
+bashMark : Mark.Block (DataSource Block)
 bashMark =
     Mark.block "Bash"
         (\code ->
             CodeBlock { language = Document.Bash, src = code }
+                |> DataSource.succeed
         )
         Mark.string
 
@@ -236,35 +203,96 @@ keyMark =
             )
 
 
-imageMark : Mark.Block Block
+imageMark : Mark.Block (DataSource Block)
 imageMark =
     Mark.record "Image"
-        (\src alt caption credit ->
-            Document.ImageBlock
-                { src = src
-                , alt = alt
-                , caption = caption
-                , credit = credit
-                }
+        (\sourcesDataSource alt caption credit ->
+            DataSource.map
+                (\{ fallbackSource, extraSources } ->
+                    Document.ImageBlock
+                        { fallbackSource = fallbackSource
+                        , extraSources = extraSources
+                        , alt = alt
+                        , caption = caption
+                        , credit = credit
+                        }
+                )
+                sourcesDataSource
         )
-        |> Mark.field "src" imagePathMark
+        |> Mark.field "src" sourcesMark
         |> Mark.field "alt" Mark.string
         |> Mark.field "caption" richTextMark
         |> Mark.field "credit" optionalRichtTextMark
         |> Mark.toBlock
 
 
-imagePathMark : Mark.Block Document.ImagePath
-imagePathMark =
+type alias Sources =
+    { fallbackSource : { mimeType : String, source : Source }
+    , extraSources : Dict String (List Source)
+    }
+
+
+sourcesMark : Mark.Block (DataSource Sources)
+sourcesMark =
     Mark.string
-        |> Mark.verify
-            (\str ->
-                Document.imagePathFromString str
-                    |> Result.fromMaybe
-                        { title = "Invalid image path"
-                        , message = [ "This path does not refer to an image." ]
-                        }
+        |> Mark.map sourcesFromPath
+
+
+sourcesFromPath : String -> DataSource Sources
+sourcesFromPath path =
+    DataSource.Port.get "imageSources" (Encode.string path) sourcesDecoder
+
+
+sourcesDecoder : Decoder Sources
+sourcesDecoder =
+    Decode.list sourceDecoder
+        |> Decode.andThen
+            (\sources ->
+                case sources of
+                    first :: rest ->
+                        Decode.succeed ( first, rest )
+
+                    [] ->
+                        Decode.fail "No sources given."
             )
+        |> Decode.map
+            (\( ( firstMimeType, firstSource ), rest ) ->
+                { fallbackSource = { mimeType = firstMimeType, source = firstSource }
+                , extraSources =
+                    List.foldl
+                        (\( mimeType, source ) dict ->
+                            Dict.update mimeType
+                                (\maybeSources ->
+                                    case maybeSources of
+                                        Just sources ->
+                                            Just (source :: sources)
+
+                                        Nothing ->
+                                            Just [ source ]
+                                )
+                                dict
+                        )
+                        Dict.empty
+                        rest
+                }
+            )
+
+
+sourceDecoder : Decoder ( String, Source )
+sourceDecoder =
+    Decode.map4
+        (\src width height mimeType ->
+            ( mimeType
+            , { src = Document.promisePath src
+              , width = width
+              , height = height
+              }
+            )
+        )
+        (Decode.field "src" Decode.string)
+        (Decode.field "width" Decode.int)
+        (Decode.field "height" Decode.int)
+        (Decode.field "mimeType" Decode.string)
 
 
 optionalRichtTextMark : Mark.Block (Maybe (List Document.Inline))

@@ -1,15 +1,15 @@
 module Renderer exposing (Rendered, backgroundTextStyle, body, heading, mainContent, navigation, paragraph, render, renderDocument, renderReference, subheading, title)
 
-import Css exposing (em, num, pct, px, rem, vh, zero)
+import Article exposing (Article)
+import Css exposing (em, num, pct, px, rem, zero)
 import Css.Global
+import Dict
 import Document exposing (..)
 import Html as PlainHtml
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attributes exposing (css)
-import Metadata exposing (ArticleMetadata)
-import Pages
-import Pages.ImagePath as ImagePath
-import Pages.PagePath as PagePath
+import Path exposing (Path)
+import Route
 import Url
 
 
@@ -34,30 +34,26 @@ body content =
         content
 
 
-type alias PagePath =
-    PagePath.PagePath Pages.PathKey
-
-
-navigation : PagePath -> Rendered msg
-navigation index =
+navigation : Rendered msg
+navigation =
     Html.nav
         [ css [ Css.marginBottom (rem 1) ]
         ]
-        [ navLink index "Go back to overview"
+        [ navLink (Route.Index |> Route.toPath) "Go back to overview"
         ]
 
 
-navLink : PagePath -> String -> Rendered msg
+navLink : Path -> String -> Rendered msg
 navLink path text =
     viewLink
-        { url = PagePath.toString path
+        { url = Path.toAbsolute path
         , text = [ Html.text text ]
         , styles = [ Css.fontStyle Css.italic ]
         }
 
 
-renderDocument : ArticleMetadata -> Document -> Rendered msg
-renderDocument meta blocks =
+renderDocument : Article -> Rendered msg
+renderDocument article =
     (List.map
         (\block ->
             case block of
@@ -79,8 +75,8 @@ renderDocument meta blocks =
                 ImageBlock image ->
                     imageBlock image
         )
-        blocks
-        ++ [ ccLicense meta.authors
+        article.document
+        ++ [ ccLicense article.frontmatter.authors
            ]
     )
         |> document
@@ -100,7 +96,7 @@ ccLicense authors =
                 let
                     icon path styles =
                         Html.img
-                            [ Attributes.src (ImagePath.toString path)
+                            [ Attributes.src path
                             , Attributes.width 14
                             , Attributes.height 14
                             , Attributes.alt ""
@@ -117,8 +113,8 @@ ccLicense authors =
                 in
                 [ Html.text "CC BY 4.0"
                 , Html.span [ css [ Css.whiteSpace Css.noWrap ] ]
-                    [ icon Pages.images.cc.cc [ Css.paddingLeft (em 0.2) ]
-                    , icon Pages.images.cc.by [ Css.paddingLeft (em 0.1) ]
+                    [ icon "images/cc/cc.svg" [ Css.paddingLeft (em 0.2) ]
+                    , icon "images/cc/by.svg" [ Css.paddingLeft (em 0.1) ]
                     ]
                 ]
             , url = "https://creativecommons.org/licenses/by/4.0/"
@@ -373,7 +369,7 @@ renderReference reference =
                     ]
                 )
                 reference.text
-        , url = PagePath.toString reference.path
+        , url = reference.path
         , styles = []
         }
 
@@ -504,24 +500,44 @@ imageBlock image =
             , Css.alignItems Css.center
             ]
         ]
-        [ let
-            dimensions =
-                ImagePath.dimensions image.src
-                    -- We know that all our images are internal and thus have dimensions.
-                    |> Maybe.withDefault { width = 0, height = 0 }
-          in
-          Html.img
-            [ Attributes.src (ImagePath.toString image.src)
-            , Attributes.alt image.alt
-            , Attributes.width dimensions.width
-            , Attributes.height dimensions.height
-            , css
-                [ Css.maxWidth (pct 100)
-                , Css.width (pct 100)
-                , Css.height Css.auto
-                ]
-            ]
+        [ Html.node "picture"
             []
+            (List.map
+                (\( mimeType, sources ) ->
+                    let
+                        srcset =
+                            List.map
+                                (\source ->
+                                    Document.pathToString source.src
+                                        ++ " "
+                                        ++ String.fromInt source.width
+                                        ++ "w"
+                                )
+                                sources
+                                |> String.join ", "
+                    in
+                    Html.source
+                        [ Attributes.attribute "srcset" srcset
+                        , Attributes.type_ mimeType
+                        ]
+                        []
+                )
+                (Dict.toList image.extraSources)
+                ++ [ Html.img
+                        [ Attributes.src (Document.pathToString image.fallbackSource.source.src)
+                        , Attributes.alt image.alt
+                        , Attributes.width image.fallbackSource.source.width
+                        , Attributes.height image.fallbackSource.source.height
+                        , css
+                            [ Css.display Css.block -- If left as inline, there will be a small gap at the bottom. See https://gtwebdev.com/workshop/gaps/image-gap.php.
+                            , Css.maxWidth (pct 100)
+                            , Css.width (pct 100)
+                            , Css.height Css.auto
+                            ]
+                        ]
+                        []
+                   ]
+            )
         , Html.figcaption
             [ css
                 [ Css.boxSizing Css.borderBox
@@ -582,7 +598,7 @@ renderNote content =
         [ let
             active =
                 Css.batch
-                    [ Css.backgroundImage (Css.url (ImagePath.toString Pages.images.bookmarkFilled))
+                    [ Css.backgroundImage (Css.url "images/bookmarkFilled.svg")
                     ]
           in
           css
@@ -637,7 +653,7 @@ renderNote content =
             , css
                 [ Css.before
                     [ Css.property "content" "\"\""
-                    , Css.backgroundImage (Css.url (ImagePath.toString Pages.images.bookmark))
+                    , Css.backgroundImage (Css.url "images/bookmark.svg")
                     , Css.display Css.inlineBlock
                     , Css.width (rem 0.7)
                     , Css.height (rem 0.8)

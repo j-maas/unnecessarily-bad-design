@@ -1,12 +1,11 @@
 ---
-type: article
 title: Radiator valves
 question: Do you turn your radiator to its highest setting to heat the room faster?
 authors: Johannes Maas
 ---
 
 |> Image
-    src=images/radiator-valves/radiator-valve.jpg
+    src=images/radiator-valves/radiator-valve
     alt=A radiator valve set to 3. The scale increases up to 5.
     credit=by Johannes Maas under [CC BY 4.0]{link|url=https://creativecommons.org/licenses/by/4.0/}
     caption=The numbers seem to represent the power with which to heat. In reality, they represent a rough temperature range.

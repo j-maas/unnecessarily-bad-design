@@ -1,9 +1,7 @@
-module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, ImagePath, Inline(..), Key(..), Keys, Link, Path, Reference, Text, TextStyle, codeLanguageFromString, imagePathFromString, keyFromString, keysFromString, pathFromString, plainText)
+module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, Inline(..), Key(..), Keys, Link, Path, Reference, Source, Text, TextStyle, codeLanguageFromString, keyFromString, keysFromString, pathToString, plainText, promisePath)
 
+import Dict exposing (Dict)
 import List.Extra as List
-import Pages exposing (PathKey)
-import Pages.ImagePath
-import Pages.PagePath
 import Url exposing (Url)
 
 
@@ -59,18 +57,9 @@ type alias Link =
     }
 
 
-type alias Path =
-    Pages.PagePath.PagePath PathKey
-
-
-pathFromString : String -> Maybe Path
-pathFromString raw =
-    List.find (\page -> raw == Pages.PagePath.toString page) Pages.allPages
-
-
 type alias Reference =
     { text : List Text
-    , path : Path
+    , path : String
     }
 
 
@@ -156,18 +145,31 @@ keyFromString raw =
             Nothing
 
 
-type alias ImagePath =
-    Pages.ImagePath.ImagePath PathKey
-
-
 type alias Image =
-    { src : ImagePath
+    { fallbackSource : { mimeType : String, source : Source }
+    , extraSources : Dict String (List Source)
     , alt : String
     , caption : List Inline
     , credit : Maybe (List Inline)
     }
 
 
-imagePathFromString : String -> Maybe ImagePath
-imagePathFromString raw =
-    List.find (\page -> raw == Pages.ImagePath.toString page) Pages.allImages
+type alias Source =
+    { src : Path
+    , width : Int
+    , height : Int
+    }
+
+
+type Path
+    = Path String
+
+
+promisePath : String -> Path
+promisePath path =
+    Path path
+
+
+pathToString : Path -> String
+pathToString (Path path) =
+    path
