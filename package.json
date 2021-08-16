@@ -1,10 +1,15 @@
 {
-  "name": "elm-pages-app",
+  "private": "true",
   "scripts": {
     "start": "elm-pages dev",
-    "build": "elm-pages build"
+    "build": "elm-pages build",
+    "processImages": "node scripts/process.js"
   },
   "devDependencies": {
-    "elm-pages": "^2.1.4"
+    "@y0hy0h/squoosh": "^0.5.0",
+    "elm-pages": "^2.1.4",
+    "glob": "^7.1.7",
+    "glob-promise": "^4.2.0",
+    "svgo": "^2.3.1"
   }
 }

@@ -16,5 +16,6 @@ All contributions will be published under these licenses.
 ## Development
 ```bash
 npm install
+npm run processImages # Processes the images into responsive sizes
 npm start # starts a local dev server using `elm-pages develop`
 ```

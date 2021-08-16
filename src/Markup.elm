@@ -2,11 +2,14 @@ module Markup exposing (compile)
 
 import DataSource exposing (DataSource)
 import DataSource.Glob as Glob
-import Document exposing (Block(..), Document, Text)
+import DataSource.Port
+import Dict exposing (Dict)
+import Document exposing (Block(..), Document, Source, Text)
 import Html.Attributes exposing (src)
+import Json.Encode as Encode
 import Mark
 import Mark.Error
-import Path exposing (Path)
+import OptimizedDecoder as Decode exposing (Decoder)
 import Url exposing (Url)
 
 
@@ -203,53 +206,93 @@ keyMark =
 imageMark : Mark.Block (DataSource Block)
 imageMark =
     Mark.record "Image"
-        (\srcDataSource alt caption credit ->
+        (\sourcesDataSource alt caption credit ->
             DataSource.map
-                (\src ->
+                (\{ fallbackSource, extraSources } ->
                     Document.ImageBlock
-                        { src = src
+                        { fallbackSource = fallbackSource
+                        , extraSources = extraSources
                         , alt = alt
                         , caption = caption
                         , credit = credit
                         }
                 )
-                srcDataSource
+                sourcesDataSource
         )
-        |> Mark.field "src" imagePathMark
+        |> Mark.field "src" sourcesMark
         |> Mark.field "alt" Mark.string
         |> Mark.field "caption" richTextMark
         |> Mark.field "credit" optionalRichtTextMark
         |> Mark.toBlock
 
 
-imagePathMark : Mark.Block (DataSource ImagePath)
-imagePathMark =
+type alias Sources =
+    { fallbackSource : { mimeType : String, source : Source }
+    , extraSources : Dict String (List Source)
+    }
+
+
+sourcesMark : Mark.Block (DataSource Sources)
+sourcesMark =
     Mark.string
-        |> Mark.map imagePathFromString
+        |> Mark.map sourcesFromPath
 
 
-type alias ImagePath =
-    Document.Path
+sourcesFromPath : String -> DataSource Sources
+sourcesFromPath path =
+    DataSource.Port.get "imageSources" (Encode.string path) sourcesDecoder
 
 
-imagePathFromString : String -> DataSource ImagePath
-imagePathFromString raw =
-    Glob.succeed identity
-        |> Glob.match (Glob.literal "public/")
-        |> Glob.capture (Glob.literal <| "images/" ++ raw)
-        |> Glob.toDataSource
-        |> DataSource.andThen
-            (\validPaths ->
-                case validPaths of
-                    [ validPath ] ->
-                        DataSource.succeed (Document.promisePath validPath)
+sourcesDecoder : Decoder Sources
+sourcesDecoder =
+    Decode.list sourceDecoder
+        |> Decode.andThen
+            (\sources ->
+                case sources of
+                    first :: rest ->
+                        Decode.succeed ( first, rest )
 
                     [] ->
-                        DataSource.fail <| "Did not find image at path `public/images/" ++ raw ++ "`."
-
-                    paths ->
-                        DataSource.fail <| "Too many candidates found for path `public/" ++ raw ++ "`: " ++ String.join ", " paths
+                        Decode.fail "No sources given."
             )
+        |> Decode.map
+            (\( ( firstMimeType, firstSource ), rest ) ->
+                { fallbackSource = { mimeType = firstMimeType, source = firstSource }
+                , extraSources =
+                    List.foldl
+                        (\( mimeType, source ) dict ->
+                            Dict.update mimeType
+                                (\maybeSources ->
+                                    case maybeSources of
+                                        Just sources ->
+                                            Just (source :: sources)
+
+                                        Nothing ->
+                                            Just [ source ]
+                                )
+                                dict
+                        )
+                        Dict.empty
+                        rest
+                }
+            )
+
+
+sourceDecoder : Decoder ( String, Source )
+sourceDecoder =
+    Decode.map4
+        (\src width height mimeType ->
+            ( mimeType
+            , { src = Document.promisePath src
+              , width = width
+              , height = height
+              }
+            )
+        )
+        (Decode.field "src" Decode.string)
+        (Decode.field "width" Decode.int)
+        (Decode.field "height" Decode.int)
+        (Decode.field "mimeType" Decode.string)
 
 
 optionalRichtTextMark : Mark.Block (Maybe (List Document.Inline))
