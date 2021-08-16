@@ -14,6 +14,8 @@ jobs:
         with:
           persist-credentials: false
 
+      # Apparently, the .npmrc isn't picked up, so set the scoped registry here.
+      # See https://stackoverflow.com/questions/58919401/installing-packages-from-github-npm-registry-auth-error-401
       - name: Configure node
         uses: actions/setup-node@v1
         with:
@@ -22,14 +24,17 @@ jobs:
           scope: '@y0hy0h'
 
       - name: Install
+        # Skip post-install scripts here, as a malicious script could steal the token.
+        # See https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#use-private-packages
         run: npm ci --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Process images
+        run: npm run processImages
+
       - name: Build 🛠️
-        run: |
-          npm run processImages
-          npm run build
+        run: npm run build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
