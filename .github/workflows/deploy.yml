@@ -24,9 +24,7 @@ jobs:
           scope: '@y0hy0h'
 
       - name: Install
-        # Skip post-install scripts here, as a malicious script could steal the token.
-        # See https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#use-private-packages
-        run: npm ci --ignore-scripts
+        run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
