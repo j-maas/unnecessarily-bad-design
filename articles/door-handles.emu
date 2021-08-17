@@ -1,18 +1,12 @@
 ---
 title: Door handles
-question: Have you ever pushed a door that should be pulled?
+question: Have you pushed a door that should be pulled?
 authors: Johannes Maas
 ---
 
-|> Image
-    src=images/door-handles/pull-door
-    alt=A glass door with a lever latch handle above which someone has written in sharpie "PULL".
-    credit=[from Flickr]{link|url=https://flic.kr/p/qxB5K3} by [Alan Levine]{link|url=https://flickr.com/photos/cogdog/} under [CC BY 2.0]{link|url=https://creativecommons.org/licenses/by/2.0/}
-    caption=Someone was so frustrated by this door that they decided to do something about it.
-
 I sometimes run into a door, because I try to push it, but it only can be pulled. Or the opposite.
 
-This is a known problem. We stick labels on the doors that tell us what to do. And I /still/ get it wrong. So labels don't solve the problem with misleading doors. `Such doors are [called Norman doors]{link|url=https://99percentinvisible.org/article/norman-doors-dont-know-whether-push-pull-blame-design/} after [Don Norman]{link|url=https://en.wikipedia.org/wiki/Don_Norman} who discusses them as the very first problem in his book [The Design of Everyday Things]{link|url=https://en.wikipedia.org/wiki/The_Design_of_Everyday_Things} (ISBN 978-0-465-05065-9).`{note}
+They know about this problem. They stick labels on the doors that tell us what to do. And I /still/ get it wrong. So labels don't solve the problem with misleading doors. `Such doors are [called Norman doors]{link|url=https://99percentinvisible.org/article/norman-doors-dont-know-whether-push-pull-blame-design/} after [Don Norman]{link|url=https://en.wikipedia.org/wiki/Don_Norman} who discusses them as the very first problem in his book [The Design of Everyday Things]{link|url=https://en.wikipedia.org/wiki/The_Design_of_Everyday_Things} (ISBN 978-0-465-05065-9).`{note}
 
 |> Heading
     How to fix it
@@ -27,4 +21,4 @@ Fortunately, when lives are at stake, this is done right; emergency doors often 
     src=images/door-handles/emergency-exit
     alt=A double door with signs stating “Do not block. Fire exit.” There is a handle going across each door with a wide, pushable lever labeled "Emergency exit. Push to open. Alarm will sound."
     credit=[from Flickr]{link|url=https://flic.kr/p/2iggPLY} by [Mike Mozart]{link|url=https://www.flickr.com/photos/jeepersmedia/} under [CC BY 2.0]{link|url=https://creativecommons.org/licenses/by/2.0/}, cropped
-    caption=It's clear that you can't pull this door. And if people rush against it, it will open.
+    caption=I won't pull this door. And if people rush against it, it will open.
