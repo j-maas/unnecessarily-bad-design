@@ -1,7 +1,6 @@
 module Markup exposing (compile)
 
 import DataSource exposing (DataSource)
-import DataSource.Glob as Glob
 import DataSource.Port
 import Dict exposing (Dict)
 import Document exposing (Block(..), Document, Source, Text)
