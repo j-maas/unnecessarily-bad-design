@@ -46,10 +46,12 @@ async function processPicture(picturePath, destinationFolderPath) {
             ".webp", "-large.webp", "-medium.webp", "-small.webp",
         ];
 
-        let allExist = false;
         for (let suffix of suffixes) {
             const sourceLastModified = (await fs.stat(picturePath)).mtimeMs;
             const destinationLastModified = (await fs.stat(`${destinationBase}${suffix}`)).mtimeMs;
+            if (sourceLastModified > destinationLastModified) {
+                throw "Process picture";
+            }
         };
         // If a path did not exist, we would have thrown an exception by now.
         console.log(`${picturePath} (already processed)`);
