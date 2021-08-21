@@ -10,11 +10,13 @@ authors: Johannes Maas
     credit=[from Flickr]{link|url=https://flic.kr/p/hMEKo} by [Matt MacGillivray]{link|url=https://www.flickr.com/photos/qmnonic/} under [CC BY 2.0]{link|url=https://creativecommons.org/licenses/by/2.0/} 
     caption=Even though they control heating plates that are placed one above of the other, these knobs are placed to the side of each other.
 
-I can't see the labels when I'm dealing with a pot. And I can't feel what plate a knob is controlling. So of course I will guess wrong sometimes. `This issue is described in [Don Norman]{link|url=https://en.wikipedia.org/wiki/Don_Norman}'s book [The Design of Everyday Things]{link|url=https://en.wikipedia.org/wiki/The_Design_of_Everyday_Things} (ISBN 978-0-465-05065-9, pp. 113--115).`{note}
+I can't see the labels when I'm dealing with a pot, because I'm usually standing too close to the counter. But I need the labels, because I can't feel which knob controls which heating plate, because they are all in the same row.
+
+So of course I will guess wrong sometimes, when the cooking already doesn't go according to plan and I'm hurrying. `This issue is described in [Don Norman]{link|url=https://en.wikipedia.org/wiki/Don_Norman}'s book [The Design of Everyday Things]{link|url=https://en.wikipedia.org/wiki/The_Design_of_Everyday_Things} (ISBN 978-0-465-05065-9, pp. 113--115).`{note}
 
 |> Heading
     How to fix it
 
-Arrange them pysically similar to the heating plates. Those that control plates in the back should be higher than those controlling plates in the front.
+Arrange the knobs pysically similar to the heating plates. Those that control plates in the back should be higher than those controlling plates in the front.
 
-Even if you don't have the space to arrange the knobs in a vertical grid just like the plates, you can at least put some slightly higher then the other ones, for example by putting their labels below them.
+Even if you don't have the space to arrange the knobs in a grid just like the plates, you can at least put those knobs that control the upper plates higher than the others, for example by moving the label below them.

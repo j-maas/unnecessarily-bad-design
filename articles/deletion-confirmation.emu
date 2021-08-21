@@ -1,16 +1,22 @@
 ---
 title: Deletion confirmation
-question: Have you regretted answering “Really delete this?” with yes?
+question: Have you ever regretted answering “Really delete this?” with yes?
 authors: Johannes Maas
 ---
 
-"Are you sure?" Yes, of course. I rarely click the delete button by accident. Instead, I'm now used to just always clicking yes as a part of all my deletions.
+|> Image
+    src=images/deletion-confirmation/phone-menu
+    alt=A person holding a phone about to delete the Facebook app.
+    credit=[from Pexels]{link|url=https://www.pexels.com/de-de/foto/person-hand-smartphone-surfen-3850250/} by [ready made]{link|url=https://www.pexels.com/de-de/@readymade} under [Pexel's license]{link|url=https://www.pexels.com/license} 
+    caption=They want to delete that app. But do they really?
 
-But sometimes I then notice that I deleted the wrong thing. Great. So now the confirmation makes deleting take longer, but still does not prevent me from accidental deletion. `This issue is described in [Don Norman]{link|url=https://en.wikipedia.org/wiki/Don_Norman}'s book [The Design of Everyday Things]{link|url=https://en.wikipedia.org/wiki/The_Design_of_Everyday_Things} (ISBN 978-0-465-05065-9, pp. 203--204).`{note}
+"Are you sure?" Yes, of course. It's really rare that I click the delete button by accident. Instead, I'm now used to just always clicking yes as a part of all my deletions.
+
+But sometimes I then notice that I deleted the wrong thing. It's always after the deletion. Great. So now the confirmation makes deleting take longer, but still does not prevent me from accidental deletion. `This issue is described in [Don Norman]{link|url=https://en.wikipedia.org/wiki/Don_Norman}'s book [The Design of Everyday Things]{link|url=https://en.wikipedia.org/wiki/The_Design_of_Everyday_Things} (ISBN 978-0-465-05065-9, pp. 203--204).`{note}
 
 |> Heading
     How to fix it
 
 Do not ask for confirmation. Offer undo.
 
-Some services already do this. After deletion, they typically show a little box with an undo button for a short while. Deleting this way is quick and easy, and if I delete something by accident, no worries, I restore it immediately.
+Some services already do this. After deletion, they typically show a little box with an undo button for a short while. Deleting this way is quick and easy, and if I delete something by accident, no worries, I can restore it immediately.
