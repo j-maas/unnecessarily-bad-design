@@ -8,7 +8,8 @@
   "devDependencies": {
     "@y0hy0h/squoosh": "^0.5.1",
     "elm": "^0.19.1-5",
-    "elm-pages": "^2.1.6",
+    "elm-optimize-level-2": "^0.1.5",
+    "elm-pages": "^2.1.7",
     "glob": "^7.1.7",
     "glob-promise": "^4.2.0",
     "svgo": "^2.4.0"
