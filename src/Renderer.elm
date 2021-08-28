@@ -500,44 +500,50 @@ imageBlock image =
             , Css.alignItems Css.center
             ]
         ]
-        [ Html.node "picture"
-            []
-            (List.map
-                (\( mimeType, sources ) ->
-                    let
-                        srcset =
-                            List.map
-                                (\source ->
-                                    Document.pathToString source.src
-                                        ++ " "
-                                        ++ String.fromInt source.width
-                                        ++ "w"
-                                )
-                                sources
-                                |> String.join ", "
-                    in
-                    Html.source
-                        [ Attributes.attribute "srcset" srcset
-                        , Attributes.type_ mimeType
-                        ]
-                        []
-                )
-                (Dict.toList image.extraSources)
-                ++ [ Html.img
-                        [ Attributes.src (Document.pathToString image.fallbackSource.source.src)
-                        , Attributes.alt image.alt
-                        , Attributes.width image.fallbackSource.source.width
-                        , Attributes.height image.fallbackSource.source.height
-                        , css
-                            [ Css.display Css.block -- If left as inline, there will be a small gap at the bottom. See https://gtwebdev.com/workshop/gaps/image-gap.php.
-                            , Css.maxWidth (pct 100)
-                            , Css.width (pct 100)
-                            , Css.height Css.auto
+        [ Html.a
+            [ Attributes.href <| Document.pathToString image.fallbackSource.source.src
+            , Attributes.target "_blank"
+            , Attributes.rel "noopener"
+            ]
+            [ Html.node "picture"
+                []
+                (List.map
+                    (\( mimeType, sources ) ->
+                        let
+                            srcset =
+                                List.map
+                                    (\source ->
+                                        Document.pathToString source.src
+                                            ++ " "
+                                            ++ String.fromInt source.width
+                                            ++ "w"
+                                    )
+                                    sources
+                                    |> String.join ", "
+                        in
+                        Html.source
+                            [ Attributes.attribute "srcset" srcset
+                            , Attributes.type_ mimeType
                             ]
-                        ]
-                        []
-                   ]
-            )
+                            []
+                    )
+                    (Dict.toList image.extraSources)
+                    ++ [ Html.img
+                            [ Attributes.src (Document.pathToString image.fallbackSource.source.src)
+                            , Attributes.alt image.alt
+                            , Attributes.width image.fallbackSource.source.width
+                            , Attributes.height image.fallbackSource.source.height
+                            , css
+                                [ Css.display Css.block -- If left as inline, there will be a small gap at the bottom. See https://gtwebdev.com/workshop/gaps/image-gap.php.
+                                , Css.maxWidth (pct 100)
+                                , Css.width (pct 100)
+                                , Css.height Css.auto
+                                ]
+                            ]
+                            []
+                       ]
+                )
+            ]
         , Html.figcaption
             [ css
                 [ Css.boxSizing Css.borderBox
