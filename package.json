@@ -10,6 +10,7 @@
     "elm": "^0.19.1-5",
     "elm-optimize-level-2": "^0.1.5",
     "elm-pages": "^2.1.9",
+    "elm-review": "^2.5.5",
     "glob": "^7.1.7",
     "glob-promise": "^4.2.0",
     "svgo": "^2.5.0"
