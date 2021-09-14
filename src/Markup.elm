@@ -9,10 +9,11 @@ import Json.Encode as Encode
 import Mark
 import Mark.Error
 import OptimizedDecoder as Decode exposing (Decoder)
+import Path exposing (Path)
 import Url exposing (Url)
 
 
-compile : String -> Result String (DataSource Document)
+compile : String -> Result String (DataSource (Document Path))
 compile rawText =
     case Mark.compile bodyDocument rawText of
         Mark.Success blocks ->
@@ -31,7 +32,7 @@ errorsToString errors =
         |> String.join "\n"
 
 
-bodyDocument : Mark.Document (DataSource Document)
+bodyDocument : Mark.Document (DataSource (Document Path))
 bodyDocument =
     Mark.document
         (\blocks -> DataSource.combine blocks)
@@ -45,27 +46,27 @@ bodyDocument =
         )
 
 
-headingMark : Mark.Block (DataSource Block)
+headingMark : Mark.Block (DataSource (Block Path))
 headingMark =
     Mark.block "Heading"
         (Heading >> DataSource.succeed)
         richTextMark
 
 
-subheadingMark : Mark.Block (DataSource Block)
+subheadingMark : Mark.Block (DataSource (Block Path))
 subheadingMark =
     Mark.block "Subheading"
         (Subheading >> DataSource.succeed)
         richTextMark
 
 
-paragraphMark : Mark.Block (DataSource Block)
+paragraphMark : Mark.Block (DataSource (Block Path))
 paragraphMark =
     richTextMark
         |> Mark.map (Paragraph >> DataSource.succeed)
 
 
-richTextMark : Mark.Block (List Document.Inline)
+richTextMark : Mark.Block (List (Document.Inline Path))
 richTextMark =
     Mark.textWith
         { view = \styles text -> Ok <| Document.FlatInline <| Document.TextInline (convertText styles text)
@@ -104,7 +105,7 @@ richTextMark =
             )
 
 
-flatTextMark : Mark.Block (List Document.FlatInline)
+flatTextMark : Mark.Block (List (Document.FlatInline Path))
 flatTextMark =
     Mark.textWith
         { view = \styles text -> Document.TextInline (convertText styles text)
@@ -114,7 +115,7 @@ flatTextMark =
         }
 
 
-flatInlines : (Document.FlatInline -> a) -> List (Mark.Record a)
+flatInlines : (Document.FlatInline Path -> a) -> List (Mark.Record a)
 flatInlines mapping =
     [ linkInline mapping
     , bashInline mapping
@@ -131,7 +132,7 @@ convertText styles text =
     }
 
 
-linkInline : (Document.FlatInline -> a) -> Mark.Record a
+linkInline : (Document.FlatInline Path -> a) -> Mark.Record a
 linkInline mapping =
     Mark.annotation "link"
         (\styledContents url ->
@@ -157,7 +158,7 @@ urlMark =
             )
 
 
-bashInline : (Document.FlatInline -> a) -> Mark.Record a
+bashInline : (Document.FlatInline Path -> a) -> Mark.Record a
 bashInline mapping =
     Mark.verbatim "bash"
         (\code ->
@@ -169,7 +170,7 @@ bashInline mapping =
         )
 
 
-bashMark : Mark.Block (DataSource Block)
+bashMark : Mark.Block (DataSource (Block Path))
 bashMark =
     Mark.block "Bash"
         (\code ->
@@ -179,7 +180,7 @@ bashMark =
         Mark.string
 
 
-keyInline : (Document.FlatInline -> a) -> Mark.Record a
+keyInline : (Document.FlatInline Path -> a) -> Mark.Record a
 keyInline mapping =
     Mark.verbatim "key"
         (\_ key ->
@@ -202,7 +203,7 @@ keyMark =
             )
 
 
-imageMark : Mark.Block (DataSource Block)
+imageMark : Mark.Block (DataSource (Block Path))
 imageMark =
     Mark.record "Image"
         (\sourcesDataSource alt caption credit ->
@@ -226,8 +227,8 @@ imageMark =
 
 
 type alias Sources =
-    { fallbackSource : { mimeType : String, source : Source }
-    , extraSources : Dict String (List Source)
+    { fallbackSource : { mimeType : String, source : Source Path }
+    , extraSources : Dict String (List (Source Path))
     }
 
 
@@ -277,24 +278,30 @@ sourcesDecoder =
             )
 
 
-sourceDecoder : Decoder ( String, Source )
+sourceDecoder : Decoder ( String, Source Path )
 sourceDecoder =
     Decode.map4
         (\src width height mimeType ->
             ( mimeType
-            , { src = Document.promisePath src
+            , { src = src
               , width = width
               , height = height
               }
             )
         )
-        (Decode.field "src" Decode.string)
+        (Decode.field "src" pathDecoder)
         (Decode.field "width" Decode.int)
         (Decode.field "height" Decode.int)
         (Decode.field "mimeType" Decode.string)
 
 
-optionalRichtTextMark : Mark.Block (Maybe (List Document.Inline))
+pathDecoder : Decoder Path
+pathDecoder =
+    Decode.string
+        |> Decode.map Path.fromString
+
+
+optionalRichtTextMark : Mark.Block (Maybe (List (Document.Inline Path)))
 optionalRichtTextMark =
     richTextMark
         |> Mark.map
@@ -307,7 +314,7 @@ optionalRichtTextMark =
             )
 
 
-noteInline : Mark.Record (Result (List Mark.Error.Error) Document.Inline)
+noteInline : Mark.Record (Result (List Mark.Error.Error) (Document.Inline Path))
 noteInline =
     Mark.verbatim "note"
         (\raw ->
@@ -323,7 +330,7 @@ noteInline =
         )
 
 
-flatInlineDocument : Mark.Document (List Document.FlatInline)
+flatInlineDocument : Mark.Document (List (Document.FlatInline Path))
 flatInlineDocument =
     Mark.document
         (\blocks -> blocks)

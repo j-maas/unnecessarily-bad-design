@@ -113,8 +113,8 @@ ccLicense authors =
                 in
                 [ Html.text "CC BY 4.0"
                 , Html.span [ css [ Css.whiteSpace Css.noWrap ] ]
-                    [ icon "images/cc/cc.svg" [ Css.paddingLeft (em 0.2) ]
-                    , icon "images/cc/by.svg" [ Css.paddingLeft (em 0.1) ]
+                    [ icon (Path.fromString "images/cc/cc.svg" |> Path.toAbsolute) [ Css.paddingLeft (em 0.2) ]
+                    , icon (Path.fromString "images/cc/by.svg" |> Path.toAbsolute) [ Css.paddingLeft (em 0.1) ]
                     ]
                 ]
             , url = "https://creativecommons.org/licenses/by/4.0/"
@@ -204,7 +204,7 @@ title text =
         [ Html.text text ]
 
 
-heading : List Document.Inline -> Rendered msg
+heading : List (Document.Inline Path) -> Rendered msg
 heading contents =
     Html.h2
         [ css
@@ -216,7 +216,7 @@ heading contents =
         (List.map renderInline contents)
 
 
-subheading : List Document.Inline -> Rendered msg
+subheading : List (Document.Inline Path) -> Rendered msg
 subheading contents =
     Html.h3
         [ css
@@ -238,7 +238,7 @@ headingStyle =
         ]
 
 
-paragraph : List Css.Style -> List Inline -> Rendered msg
+paragraph : List Css.Style -> List (Inline Path) -> Rendered msg
 paragraph styles content =
     Html.p
         [ css (paragraphStyle :: styles)
@@ -271,7 +271,7 @@ paragraphFontStyle =
         ]
 
 
-renderInline : Inline -> Rendered msg
+renderInline : Inline Path -> Rendered msg
 renderInline inline =
     case inline of
         Document.FlatInline plain ->
@@ -281,7 +281,7 @@ renderInline inline =
             renderNote content
 
 
-renderFlatInline : FlatInline -> Rendered msg
+renderFlatInline : FlatInline Path -> Rendered msg
 renderFlatInline inline =
     case inline of
         Document.TextInline text ->
@@ -358,7 +358,7 @@ viewLink { text, url, styles } =
         text
 
 
-renderReference : Document.Reference -> Rendered msg
+renderReference : Document.Reference Path -> Rendered msg
 renderReference reference =
     viewLink
         { text =
@@ -369,7 +369,7 @@ renderReference reference =
                     ]
                 )
                 reference.text
-        , url = reference.path
+        , url = Path.toAbsolute reference.path
         , styles = []
         }
 
@@ -465,7 +465,7 @@ renderKey key =
         [ Html.text keyText ]
 
 
-imageBlock : Document.Image -> Rendered msg
+imageBlock : Document.Image Path -> Rendered msg
 imageBlock image =
     let
         credits =
@@ -501,7 +501,7 @@ imageBlock image =
             ]
         ]
         [ Html.a
-            [ Attributes.href <| Document.pathToString image.fallbackSource.source.src
+            [ Attributes.href <| Path.toAbsolute image.fallbackSource.source.src
             , Attributes.target "_blank"
             , Attributes.rel "noopener"
             ]
@@ -513,7 +513,7 @@ imageBlock image =
                             srcset =
                                 List.map
                                     (\source ->
-                                        Document.pathToString source.src
+                                        Path.toAbsolute source.src
                                             ++ " "
                                             ++ String.fromInt source.width
                                             ++ "w"
@@ -529,7 +529,7 @@ imageBlock image =
                     )
                     (Dict.toList image.extraSources)
                     ++ [ Html.img
-                            [ Attributes.src (Document.pathToString image.fallbackSource.source.src)
+                            [ Attributes.src (Path.toAbsolute image.fallbackSource.source.src)
                             , Attributes.alt image.alt
                             , Attributes.width image.fallbackSource.source.width
                             , Attributes.height image.fallbackSource.source.height
@@ -598,7 +598,7 @@ backgroundTextStyle =
 
 {-| This solution to notes is inspired by <https://edwardtufte.github.io/tufte-css/#sidenotes>
 -}
-renderNote : List FlatInline -> Rendered msg
+renderNote : List (FlatInline Path) -> Rendered msg
 renderNote content =
     Html.span
         [ let

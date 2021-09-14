@@ -12,6 +12,7 @@ import Html.Styled.Attributes exposing (css)
 import Page exposing (Page, StaticPayload)
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url as Url
+import Path
 import Renderer
 import Shared
 import Site
@@ -89,7 +90,7 @@ view _ _ static =
                     (\article ->
                         let
                             title =
-                                [ Document.ReferenceInline { text = [ Document.plainText article.title ], path = article.slug } ]
+                                [ Document.ReferenceInline { text = [ Document.plainText article.title ], path = Path.fromString article.slug } ]
                                     |> List.map Document.FlatInline
 
                             question =

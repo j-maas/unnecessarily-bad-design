@@ -1,34 +1,34 @@
-module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, Inline(..), Key(..), Keys, Link, Path, Reference, Source, Text, TextStyle, codeLanguageFromString, keyFromString, keysFromString, pathToString, plainText, promisePath)
+module Document exposing (Block(..), Code, CodeLanguage(..), Document, FlatInline(..), Image, Inline(..), Key(..), Keys, Link, Reference, Source, Text, TextStyle, codeLanguageFromString, keyFromString, keysFromString, plainText)
 
 import Dict exposing (Dict)
 import List.Extra as List
 import Url exposing (Url)
 
 
-type alias Document =
-    List Block
+type alias Document path =
+    List (Block path)
 
 
-type Block
+type Block path
     = Title String
-    | Heading (List Inline)
-    | Subheading (List Inline)
-    | Paragraph (List Inline)
+    | Heading (List (Inline path))
+    | Subheading (List (Inline path))
+    | Paragraph (List (Inline path))
     | CodeBlock Code
-    | ImageBlock Image
+    | ImageBlock (Image path)
 
 
 {-| Since `Note`s should not contain other `Note`s, we differentiate between flat and other inlines.
 -}
-type Inline
-    = FlatInline FlatInline
-    | Note (List FlatInline)
+type Inline path
+    = FlatInline (FlatInline path)
+    | Note (List (FlatInline path))
 
 
-type FlatInline
+type FlatInline path
     = TextInline Text
     | LinkInline Link
-    | ReferenceInline Reference
+    | ReferenceInline (Reference path)
     | CodeInline Code
     | KeysInline Keys
 
@@ -57,9 +57,9 @@ type alias Link =
     }
 
 
-type alias Reference =
+type alias Reference path =
     { text : List Text
-    , path : String
+    , path : path
     }
 
 
@@ -145,31 +145,17 @@ keyFromString raw =
             Nothing
 
 
-type alias Image =
-    { fallbackSource : { mimeType : String, source : Source }
-    , extraSources : Dict String (List Source)
+type alias Image path =
+    { fallbackSource : { mimeType : String, source : Source path }
+    , extraSources : Dict String (List (Source path))
     , alt : String
-    , caption : List Inline
-    , credit : Maybe (List Inline)
+    , caption : List (Inline path)
+    , credit : Maybe (List (Inline path))
     }
 
 
-type alias Source =
-    { src : Path
+type alias Source path =
+    { src : path
     , width : Int
     , height : Int
     }
-
-
-type Path
-    = Path String
-
-
-promisePath : String -> Path
-promisePath path =
-    Path path
-
-
-pathToString : Path -> String
-pathToString (Path path) =
-    path

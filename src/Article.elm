@@ -6,11 +6,12 @@ import DataSource.Glob as Glob
 import Document exposing (Document)
 import Markup
 import OptimizedDecoder as Decode exposing (Decoder)
+import Path exposing (Path)
 
 
 type alias Article =
     { frontmatter : Frontmatter
-    , document : Document
+    , document : Document Path
     }
 
 
