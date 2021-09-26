@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const glob = require('glob-promise');
-const { Image } = require('@y0hy0h/squoosh');
+const { Image } = require('@j-maas/squoosh');
 const { optimize } = require('svgo');
 
 const inputFolder = "images";
