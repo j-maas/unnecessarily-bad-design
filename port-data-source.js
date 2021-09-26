@@ -1,4 +1,4 @@
-const { Image } = require("@y0hy0h/squoosh");
+const { Image } = require("@j-maas/squoosh");
 const { inputFolder, destinationFolder, getSizes } = require("./scripts/processImages");
 
 module.exports =
