@@ -6,7 +6,7 @@
     "processImages": "node scripts/process.js"
   },
   "devDependencies": {
-    "@y0hy0h/squoosh": "^0.5.1",
+    "@j-maas/squoosh": "^0.5.1",
     "elm": "^0.19.1-5",
     "elm-optimize-level-2": "^0.1.5",
     "elm-pages": "^2.1.9",
