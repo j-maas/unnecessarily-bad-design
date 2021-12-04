@@ -1,5 +1,5 @@
-const { Image } = require("@j-maas/squoosh");
-const { inputFolder, destinationFolder, getSizes } = require("./scripts/processImages");
+const sizeOf = require('image-size');
+const { destinationFolder, getSizes } = require("./scripts/processImages");
 
 module.exports =
 /**
@@ -9,9 +9,10 @@ module.exports =
 {
     imageSources: async function (filePath) {
         const picturePath = `${destinationFolder}/${filePath}.jpg`;
-        const image = new Image(picturePath);
-        const info = (await image.decoded).bitmap;
-        const sizes = getSizes(info.width, info.height);
+
+        const imageSize = sizeOf(picturePath);
+        const sizes = getSizes(imageSize.width, imageSize.height);
+
         return [
             { src: `${filePath}.jpg`, width: sizes.original.width, height: sizes.original.height, mimeType: "image/jpeg" },
             { src: `${filePath}-large.jpg`, width: sizes.large.width, height: sizes.large.height, mimeType: "image/jpeg" },

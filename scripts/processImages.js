@@ -1,18 +1,18 @@
 const fs = require('fs/promises');
 const path = require('path');
 const glob = require('glob-promise');
-const { Image } = require('@j-maas/squoosh');
+const { cpus } = require('os');
 const { optimize } = require('svgo');
 
 const inputFolder = "images";
 const destinationFolder = "public";
 
-async function process() {
+async function process(imagePool) {
     // Process pictures
     const picturePaths = await glob(`${inputFolder}/**/*.@(jpg|jpeg|png|webp)`);
     console.log(`Found ${picturePaths.length} pictures.`);
     for (let filePath of picturePaths) {
-        await processPicture(filePath, getDestinationFolderPath(filePath));
+        await processPicture(imagePool, filePath, getDestinationFolderPath(filePath));
     }
 
     // Process vector graphics
@@ -35,7 +35,7 @@ function getDestinationFolderPath(filePath) {
     return `${destinationFolder}/${relativePath}`;
 }
 
-async function processPicture(picturePath, destinationFolderPath) {
+async function processPicture(imagePool, picturePath, destinationFolderPath) {
     const extension = path.extname(picturePath);
     const fileName = path.basename(picturePath, extension);
     const destinationBase = `${destinationFolderPath}/${fileName}`;
@@ -62,7 +62,8 @@ async function processPicture(picturePath, destinationFolderPath) {
 
     console.log(`${picturePath}`);
 
-    const image = new Image(picturePath);
+    const file = await fs.readFile(picturePath);
+    const image = imagePool.ingestImage(file);
 
     const encodeOptions = {
         mozjpeg: {},
