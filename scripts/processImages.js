@@ -1,7 +1,6 @@
 const fs = require('fs/promises');
 const path = require('path');
 const glob = require('glob-promise');
-const { cpus } = require('os');
 const { optimize } = require('svgo');
 
 const inputFolder = "images";
@@ -11,9 +10,9 @@ async function process(imagePool) {
     // Process pictures
     const picturePaths = await glob(`${inputFolder}/**/*.@(jpg|jpeg|png|webp)`);
     console.log(`Found ${picturePaths.length} pictures.`);
-    for (let filePath of picturePaths) {
-        await processPicture(imagePool, filePath, getDestinationFolderPath(filePath));
-    }
+    await Promise.all(picturePaths.map(filePath =>
+        processPicture(imagePool, filePath, getDestinationFolderPath(filePath))
+    ));
 
     // Process vector graphics
     const svgPaths = await glob(`${inputFolder}/**/*.svg`);
@@ -59,8 +58,6 @@ async function processPicture(imagePool, picturePath, destinationFolderPath) {
     } catch (e) {
         // Picture was not yet processed, do it now.
     }
-
-    console.log(`${picturePath}`);
 
     const file = await fs.readFile(picturePath);
     const image = imagePool.ingestImage(file);
@@ -118,6 +115,8 @@ async function processPicture(imagePool, picturePath, destinationFolderPath) {
         writeFile(`${destinationBase}-small.jpg`, (await image.encodedWith.mozjpeg).binary),
         writeFile(`${destinationBase}-small.webp`, (await image.encodedWith.webp).binary)
     ]);
+
+    console.log(`Finished ${picturePath}`);
 }
 
 function getSizes(width, height) {
